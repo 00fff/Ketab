@@ -23,4 +23,6 @@ image = vision.Image(content=content)
 response = client.document_text_detection(image=image)
 # Get the text annotations
 fullText = response.full_text_annotation.text
-print(fullText)
+Demo_file = open("Demofile.txt", "w")
+Demo_file.write(fullText)
+Demo_file.close()
