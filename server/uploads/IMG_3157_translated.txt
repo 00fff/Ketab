@@ -1,0 +1,23 @@
+ak
+Defing a function
+def
+we can make our own functions by using dot as such
+a function for greeting Someone
+here is a
+def greet_user();
+Print ("hello")
+greet_user()
+Output:
+Hello
+Passing through for function:
+We
+Can modify its by adding username in
+the Parenthesis and make it So when we
+define it with (usarnane) it says Hello to their
+Username aswell,
+18
+def greet. User (Username):
+Print (f." Hello, {Username. title (23!")
+greet_User (Jesse)
+Output:
+Hello, Josse
