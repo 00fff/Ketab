@@ -1,36 +1,26 @@
 import os
-import io
 from google.cloud import vision
-import pandas as pd
+from google.cloud.vision_v1 import types
 
-# Set the path to the Google Cloud service account credentials file
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r"E:\Ketab\fast-gecko-431701-t6-9e06164bd591.json"
+# Set up authentication
 
-# Initialize the Vision API client
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = r"ServiceAccountToken.json"
+
+# Create a client
 client = vision.ImageAnnotatorClient()
 
-# Define the image path
-img_path = r"E:\Ketab\IMG_3157.jpg"  # Make sure this path is correct
+# Path to the image file
+image_path = '../IMG_3157.jpg'
 
-# Open the image file
-with io.open(img_path, 'rb') as image_file:
+# Read the image file
+with open(image_path, 'rb') as image_file:
     content = image_file.read()
 
-# Construct the image object
+# Create an image object
 image = vision.Image(content=content)
 
 # Perform text detection
-response = client.text_detection(image=image)
-
-# Initialize a list to collect text annotations
-texts_list = []
-
-# Extract text annotations and add them to the list
-for text in response.text_annotations:
-    texts_list.append({'locale': text.locale, 'description': text.description})
-
-# Create a DataFrame from the list
-df = pd.DataFrame(texts_list)
-
-# Print the DataFrame
-print(df)
+response = client.document_text_detection(image=image)
+# Get the text annotations
+fullText = response.full_text_annotation.text
+print(fullText)
