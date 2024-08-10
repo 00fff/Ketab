@@ -28,18 +28,19 @@ CORS(app, supports_credentials=True, origins="*")
 def translate():
     return render_template("index.html")
 
-@app.route("/signUp", methods=['GET', 'POST'])
+@app.route("/signUp", methods=['POST'])
 @cross_origin(supports_credentials=True)
 def signUp():
     if request.method == 'POST':
         print('hello')
-        username = request.args.get('username')
-        email = request.args.get('email')
-        password = request.args.get('password')
+        username = request.form.get('username')
+        email = request.form.get('email')
+        password = request.form.get('password')
         print(username, email, password)
         return jsonify({'username': username, 'email': email, 'password': password})
     
     return jsonify({'message': 'Invalid request method'}), 400
+
 
 @app.route("/upload", methods=['GET', 'POST'])
 @cross_origin(supports_credentials=True)
