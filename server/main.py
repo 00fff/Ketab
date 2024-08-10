@@ -1,10 +1,14 @@
 from flask import Flask, render_template, request, flash, redirect, url_for, jsonify
+from supabase import create_client
 from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 import os
-
+from models import db
+from dotenv import load_dotenv
 from google.cloud import vision
 from google.cloud.vision_v1 import types
+# Load environment variables from .env file
+load_dotenv()
 # variables 
 UPLOAD_FOLDER = '/uploads'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg',}
@@ -18,9 +22,16 @@ client = vision.ImageAnnotatorClient()
 
 # Set Up Flask App
 app = Flask(__name__)
-app.secret_key = ("ioefjefjieiofjefjio")
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(__file__), 'uploads')
+# allows for React to fetch
 CORS(app, supports_credentials=True, origins="*")
+# Setting Up Database
+SUPABASE_URL = os.environ.get("SUPABASE_URL")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+
 
 # Image Route
 @app.route("/")
@@ -37,6 +48,7 @@ def signUp():
         email = request.form.get('email')
         password = request.form.get('password')
         print(username, email, password)
+        user = supabase.auth.sign_up({ "email": email, "password": password })
         return jsonify({'username': username, 'email': email, 'password': password})
     
     return jsonify({'message': 'Invalid request method'}), 400
