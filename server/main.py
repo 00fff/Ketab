@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, flash, redirect, url_for
+from flask import Flask, render_template, request, flash, redirect, url_for, jsonify
 from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 import os
+
 from google.cloud import vision
 from google.cloud.vision_v1 import types
 # variables 
@@ -26,6 +27,19 @@ CORS(app, supports_credentials=True, origins="*")
 @cross_origin(supports_credentials=True)
 def translate():
     return render_template("index.html")
+
+@app.route("/signUp", methods=['GET', 'POST'])
+@cross_origin(supports_credentials=True)
+def signUp():
+    if request.method == 'POST':
+        print('hello')
+        username = request.args.get('username')
+        email = request.args.get('email')
+        password = request.args.get('password')
+        print(username, email, password)
+        return jsonify({'username': username, 'email': email, 'password': password})
+    
+    return jsonify({'message': 'Invalid request method'}), 400
 
 @app.route("/upload", methods=['GET', 'POST'])
 @cross_origin(supports_credentials=True)
@@ -69,22 +83,3 @@ if __name__ == "__main__":
     app.run(debug=True, port=8080)
 
     
-
-
-
-
-# # Read the image file
-# with open(image_path, 'rb') as image_file:
-#     content = image_file.read()
-
-# # Create an image object
-# image = vision.Image(content=content)
-
-# # Perform text detection
-# response = client.document_text_detection(image=image)
-# # Get the text annotations
-# fullText = response.full_text_annotation.text
-
-# Demo_file = open("Demofile.txt", "w")
-# Demo_file.write(fullText)
-# Demo_file.close()

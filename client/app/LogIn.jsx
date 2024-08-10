@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Redirect, useRouter } from "expo-router";
 import { View, Text, SafeAreaView, TextInput, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import {axios} from 'axios'
 const LogIn = () => {
   const router = new useRouter;
   const [name, setName] = useState('');
@@ -10,7 +11,6 @@ const LogIn = () => {
   const [showPassword, setShowPassword] = useState(false);
   const togglePassword = () => {
     setShowPassword(!showPassword)
-    console.log(showPassword)
   }
   return (
     <SafeAreaView style={{ backgroundColor: "#0E3B43", flex: 1, justifyContent: 'center', alignItems: 'center' }}>
