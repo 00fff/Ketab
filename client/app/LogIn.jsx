@@ -9,6 +9,26 @@ const LogIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const Login = async (email, password) => {
+    try {
+      const response = await axios.post("http://127.0.0.1:8080/signIn", 
+        {
+          email: email,
+          password: password
+        },
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          withCredentials: true // Include credentials if needed
+        }
+      );
+      router.push('/home'); // Redirect to Home Page IF LogIn Is Succeful
+      console.log(response.data);
+    } catch (error) {
+      console.error('There was an error!', error);
+    }
+  };
   const togglePassword = () => {
     setShowPassword(!showPassword)
   }
@@ -69,10 +89,10 @@ const LogIn = () => {
             marginTop: 30,
             alignItems: 'center'
           }}
-          onPress={() => console.log('Sign Up button pressed')}
+          onPress={() => Login(email, password)}
         >
          
-          <Text style={{ color: '#FFF', fontWeight: '900' }}>Sign Up</Text>
+          <Text style={{ color: '#FFF', fontWeight: '900' }}>Log In</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

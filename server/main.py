@@ -32,26 +32,60 @@ SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 
-
 # Image Route
 @app.route("/")
 @cross_origin(supports_credentials=True)
 def translate():
+    return redirect('http://localhost:8081/home')
+
+# Image Route
+@app.route("/translate")
+@cross_origin(supports_credentials=True)
+def translate():
     return render_template("index.html")
+
+
 
 @app.route("/signUp", methods=['POST'])
 @cross_origin(supports_credentials=True)
 def signUp():
     if request.method == 'POST':
-        print('hello')
         username = request.form.get('username')
         email = request.form.get('email')
         password = request.form.get('password')
-        print(username, email, password)
-        user = supabase.auth.sign_up({ "email": email, "password": password })
-        return jsonify({'username': username, 'email': email, 'password': password})
+        
+        # Step 1: Sign up the user
+        response = supabase.auth.sign_up({"email": email, "password": password})
+        return jsonify({'message': 'Account Succefully Created'}), 200
+    return jsonify({'message': 'Invalid request method'}), 400
+
+
+@app.route("/signIn", methods=['POST'])
+@cross_origin(supports_credentials=True)
+def signIn():   
+    if request.method == 'POST':
+        email = request.form.email
+        password = request.form.password
+        login = supabase.auth.sign_in_with_password({"email": email, "password": password})
+        return jsonify({'email': email, 'password': password})
     
     return jsonify({'message': 'Invalid request method'}), 400
+
+@app.route("/createBook", methods=['POST'])
+@cross_origin(supports_credentials=True)
+def createBook():
+    if request.method == 'POST':
+        title = request.form.get('title')
+        description = request.form.get('description')
+        response = (
+    supabase.table("books")
+    .insert({"id": 1, "title": title, 'description':description})
+    .execute()
+)
+        return jsonify({'email': title, 'password': description})
+    
+    return jsonify({'message': 'Invalid request method'}), 400
+
 
 
 @app.route("/upload", methods=['GET', 'POST'])
