@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Redirect, useRouter } from "expo-router";
 import { View, Text, SafeAreaView, TextInput, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import {axios} from 'axios'
+import axios from 'axios'
 const LogIn = () => {
   const router = new useRouter;
   const [name, setName] = useState('');

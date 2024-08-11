@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Redirect, useRouter } from "expo-router";
 import { View, Text, SafeAreaView, TextInput, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import qs from 'qs'; // Needed to stringify the form data
 import axios from 'axios';
+
 const Signup = () => {
   const router = new useRouter;
   const [name, setName] = useState('');

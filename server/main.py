@@ -35,7 +35,7 @@ supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 # Image Route
 @app.route("/")
 @cross_origin(supports_credentials=True)
-def translate():
+def home():
     return redirect('http://localhost:8081/home')
 
 # Image Route
@@ -64,12 +64,21 @@ def signUp():
 @cross_origin(supports_credentials=True)
 def signIn():   
     if request.method == 'POST':
-        email = request.form.email
-        password = request.form.password
+        email = request.form.get('email')
+        password = request.form.get('password')
         login = supabase.auth.sign_in_with_password({"email": email, "password": password})
         return jsonify({'email': email, 'password': password})
     
     return jsonify({'message': 'Invalid request method'}), 400
+
+@app.route("/logOut", methods= ["POST", "GET"])
+@cross_origin(supports_credentials=True)
+def logOut():
+    if request.method =='POST':
+        response = supabase.auth.sign_out()
+        return jsonify({'message': 'Succefully Logged Out'}), 200
+    return jsonify({'message': 'Invalid request method'}), 400
+
 
 @app.route("/createBook", methods=['POST'])
 @cross_origin(supports_credentials=True)

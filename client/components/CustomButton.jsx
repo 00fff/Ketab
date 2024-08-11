@@ -1,17 +1,26 @@
 import React from 'react';
-import { Redirect, router } from "expo-router";
-import { TouchableOpacity, ScrollView, SafeAreaView, View, TextInput, Text} from 'react-native';
-
+import { TouchableOpacity, View, Text } from 'react-native';
 
 const CustomButton = (prop) => {
   return (
-    <View>
-      <TouchableOpacity onPress={prop.onPress} style={{borderRadius: 12, borderColor: "black", backgroundColor: '#357266', padding: 15, }}>
-        <Text>{prop.text}</Text>
+    <View style={{
+            borderColor: 'black', // Apply border color to the View
+            borderWidth: '#0e3b43', // Make sure the border width is set
+            borderRadius: 8,
+            marginTop: 30,
+          }}>
+      <TouchableOpacity 
+        onPress={prop.onPress} 
+        style={{
+          backgroundColor: '#357266',
+          borderRadius: 4,
+          paddingVertical: 15,
+          alignItems: 'center',
+        }}>
+        <Text style={{ color: '#FFF' }}>{prop.text}</Text>
       </TouchableOpacity>
     </View>
   );
-  
 };
 
 export default CustomButton;

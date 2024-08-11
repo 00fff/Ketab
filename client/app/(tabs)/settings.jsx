@@ -1,5 +1,9 @@
 import React from 'react';
-import { SafeAreaView, ScrollView, View, Text} from 'react-native';
+import { View, Text, SafeAreaView, ScrollView, TextInput, TouchableOpacity } from 'react-native';
+import CustomButton from '../../components/CustomButton';
+const LogOut = () => {
+
+  }
 
 const settings = () => {
   return (
@@ -7,6 +11,11 @@ const settings = () => {
     <ScrollView>
     <View>
       <Text>settings</Text>
+    </View>
+    <View>
+      <CustomButton text={'Log Out'} onPress={LogOut()}/>
+
+
     </View>
     </ScrollView>
     </SafeAreaView>
