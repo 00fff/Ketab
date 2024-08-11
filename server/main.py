@@ -100,8 +100,9 @@ def logOut():
 def current_user():
     if request.method =='GET':
         response = supabase.auth.get_user()
-        
-        return jsonify({'message': 'Current User Information Succefully Retrevied'}), 200
+        email = response.user.email
+        user_information = {'email': email}
+        return jsonify(user_information), 200
     return jsonify({'message': 'Invalid request method'}), 400
 
 

@@ -28,14 +28,15 @@ const LogIn = () => {
         }
       );
       const jwt_token = response.data.jwt_token; // Adjust if the token is nested differently
+      console.log(jwt_token)
       if (Platform.OS === 'android' || Platform.OS === 'ios') {
 
         key = await SecureStore.setItemAsync('jwt_token', jwt_token);
-        console.log(key)
       } else {
         key = await AsyncStorage.setItem('jwt_token', jwt_token);
-        console.log(key)
       }
+      
+     console.log(key)
       router.push('/home'); // Redirect to Home Page IF LogIn Is Succeful
       console.log(response.data);
     } catch (error) {
