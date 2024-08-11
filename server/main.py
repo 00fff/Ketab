@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, flash, redirect, url_for, jsonify
+from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, session
 from supabase import create_client
 from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
@@ -7,6 +7,8 @@ from models import db
 from dotenv import load_dotenv
 from google.cloud import vision
 from google.cloud.vision_v1 import types
+import datetime
+import jwt
 # Load environment variables from .env file
 load_dotenv()
 # variables 
@@ -53,12 +55,21 @@ def signUp():
         username = request.form.get('username')
         email = request.form.get('email')
         password = request.form.get('password')
-        
         # Step 1: Sign up the user
         response = supabase.auth.sign_up({"email": email, "password": password})
-        return jsonify({'message': 'Account Succefully Created'}), 200
+        jwt_token = jwt.encode({"email": email, "password": password, 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=30)}, "secret", algorithm="HS256")
+        session['jwt_token'] = jwt_token
+        return jsonify({'message': 'Account Succefully Created', 'jwt_token': jwt_token}), 200
     return jsonify({'message': 'Invalid request method'}), 400
 
+@app.route('/token', methods=['POST', 'GET'])
+@cross_origin(supports_credentials=True)
+def token():
+    if request.method == 'GET':
+        if session['jwt_token']:
+            return session['jwt_token']
+    else: 
+        return jsonify({'message': 'Invalid request method'}), 400
 
 @app.route("/signIn", methods=['POST'])
 @cross_origin(supports_credentials=True)
@@ -66,10 +77,15 @@ def signIn():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
+        # Authenticate with Supabase
         login = supabase.auth.sign_in_with_password({"email": email, "password": password})
-        return jsonify({'email': email, 'password': password})
-    
-    return jsonify({'message': 'Invalid request method'}), 400
+        utc_now = datetime.datetime.now(datetime.timezone.utc)
+        # Generate JWT token (don't include password in the token)
+        jwt_token = jwt.encode(
+            {"email": email, "exp": utc_now + datetime.timedelta(days=30)}, "your_jwt_secret", algorithm="HS256")
+        # Store JWT token in session
+        session['jwt_token'] = jwt_token
+        return jsonify({'message': 'Sign in successful', 'jwt_token': jwt_token}), 200
 
 @app.route("/logOut", methods= ["POST", "GET"])
 @cross_origin(supports_credentials=True)
@@ -77,6 +93,15 @@ def logOut():
     if request.method =='POST':
         response = supabase.auth.sign_out()
         return jsonify({'message': 'Succefully Logged Out'}), 200
+    return jsonify({'message': 'Invalid request method'}), 400
+
+@app.route("/current_user", methods=['POST', 'GET'])
+@cross_origin(supports_credentials=True)
+def current_user():
+    if request.method =='GET':
+        response = supabase.auth.get_user()
+        
+        return jsonify({'message': 'Current User Information Succefully Retrevied'}), 200
     return jsonify({'message': 'Invalid request method'}), 400
 
 
@@ -136,6 +161,7 @@ def upload():
     return render_template("index.html")
 
 if __name__ == "__main__":
-    app.run(debug=True, port=8080)
+    app.run(debug=True, host='0.0.0.0', port=8080)
+
 
     

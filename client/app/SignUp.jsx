@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Redirect, useRouter } from "expo-router";
 import { View, Text, SafeAreaView, TextInput, TouchableOpacity } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import * as SecureStore from 'expo-secure-store';
 import axios from 'axios';
 
 const Signup = () => {
@@ -25,6 +26,11 @@ const Signup = () => {
           withCredentials: true // Include credentials if needed
         }
       );
+       // Extract JWT token from response data
+    const jwt_token = response.data.jwt_token; // Adjust according to the actual response structure
+
+    // Store JWT token securely
+    await SecureStore.setItemAsync('jwt_token', jwt_token);
       router.push('/home'); // Redirect to Home Page IF SignUp Is Succeful
       console.log(response.data);
     } catch (error) {
