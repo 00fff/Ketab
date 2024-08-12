@@ -1,23 +1,23 @@
 import React from 'react';
 import { TouchableOpacity, View, Text } from 'react-native';
 
-const CustomButton = (prop) => {
+const CustomButton = ({ onPress, color, text }) => {
   return (
     <View style={{
-            borderColor: 'black', // Apply border color to the View
-            borderWidth: '#0e3b43', // Make sure the border width is set
-            borderRadius: 8,
-            marginTop: 30,
-          }}>
+      borderColor: 'black', // Apply border color to the View
+      borderWidth: 1, // Make sure the border width is set to a numeric value
+      borderRadius: 8,
+      marginTop: 30,
+    }}>
       <TouchableOpacity 
-        onPress={prop.onPress} 
+        onPress={onPress} 
         style={{
-          backgroundColor: '#357266',
+          backgroundColor: color, // Use color prop for background color
           borderRadius: 4,
           paddingVertical: 15,
           alignItems: 'center',
         }}>
-        <Text style={{ color: '#FFF' }}>{prop.text}</Text>
+        <Text style={{ color: '#FFF' }}>{text}</Text>
       </TouchableOpacity>
     </View>
   );

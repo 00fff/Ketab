@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { useRouter } from 'expo-router';
-import { View, Text, SafeAreaView, ScrollView, Platform } from 'react-native';
+import { View, Text, SafeAreaView, ScrollView, Platform, Image } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
@@ -9,6 +9,8 @@ import axios from 'axios';
 const Settings = () => {
   const router = useRouter();
   const [email, setEmail] = useState('')
+  const [pfp, setPfp] = useState('')
+  const [username, setUsername] = useState('');
 
   const LogOut = async () => {
     try {
@@ -36,6 +38,8 @@ const Settings = () => {
         withCredentials: true // Include credentials if needed
       });
       setEmail(response.data.email)
+      setUsername(response.data.name)
+      setPfp(response.data.pfp)
     } catch (error) {
       console.error('Error fetching user information:', error); // Log error if request fails
     }
@@ -47,16 +51,16 @@ const Settings = () => {
   )
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor: '#357266', flex: 1}}>
       <ScrollView>
         <View>
-          <Text>Settings</Text> {/* Displaying the title of the page */}
         </View>
         <View>
           {/* Button to trigger the logout function */}
-          <Text>{email}</Text>
-          <CustomButton text={'Log Out'} onPress={LogOut} />
-          <CustomButton text={'Information'} onPress={fetchInformation} />
+          <Image source={{ uri: pfp }} style={{ width: 100, height: 100, borderRadius: 7, alignSelf: 'center', paddingTop: 50}}/>
+          <Text style={{fontSize: 50, textAlign: 'center'}}>{username}</Text>
+          <CustomButton text={'Log Out'} onPress={LogOut} color={'#0e3b43'} />
+
         </View>
       </ScrollView>
     </SafeAreaView>

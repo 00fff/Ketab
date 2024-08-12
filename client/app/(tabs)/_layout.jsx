@@ -4,11 +4,20 @@ import { Ionicons } from 'react-native-vector-icons';
 
 export default function TabsLayout() {
   return (
-    <Tabs
-      screenOptions={{headerShown: false, }}>
+    <Tabs 
+      screenOptions={{headerShown: false, 
+        tabBarStyle: { backgroundColor: '#a3bbad',
+        borderTopWidth: 0, // Remove top border
+        }, 
+        tabBarActiveTintColor: '#005e7c',
+        tabBarInactiveTintColor: '#357266', // Color of the inactive tab icons and labels 
+        
+       }}
+      >
       <Tabs.Screen
         name="home"
         options={{
+          
           tabBarLabel: 'Home',
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" color={color} size={size} />

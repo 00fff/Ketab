@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, session
+from gotrue.errors import AuthApiError
 from supabase import create_client
 from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
@@ -80,19 +81,29 @@ def token():
 
 @app.route("/signIn", methods=['POST'])
 @cross_origin(supports_credentials=True)
-def signIn():   
-    if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
-        # Authenticate with Supabase
-        login = supabase.auth.sign_in_with_password({"email": email, "password": password})
-        utc_now = datetime.datetime.now(datetime.timezone.utc)
-        # Generate JWT token (don't include password in the token)
-        jwt_token = jwt.encode(
-            {"email": email, "exp": utc_now + datetime.timedelta(days=30)}, "your_jwt_secret", algorithm="HS256")
-        # Store JWT token in session
-        session['jwt_token'] = jwt_token
-        return jsonify({'message': 'Sign in successful', 'jwt_token': jwt_token}), 200
+def signIn():      
+    try: 
+        if request.method == 'POST':
+            email = request.form.get('email')
+            password = request.form.get('password')
+            # Authenticate with Supabase
+            login = supabase.auth.sign_in_with_password({"email": email, "password": password})
+            utc_now = datetime.datetime.now(datetime.timezone.utc)
+            # Generate JWT token (don't include password in the token)
+            jwt_token = jwt.encode(
+                {"email": email, "exp": utc_now + datetime.timedelta(days=30)}, "your_jwt_secret", algorithm="HS256")
+            # Store JWT token in session
+            session['jwt_token'] = jwt_token
+            return jsonify({'message': 'Sign in successful', 'jwt_token': jwt_token}), 200
+    except AuthApiError as e:
+            # Handle specific authentication errors
+            if "Email not confirmed" in str(e):
+                return jsonify({'message': 'Email not confirmed. Please check your email to confirm your account.'}), 400
+            else:
+                return jsonify({'message': f'Authentication failed: {str(e)}'}), 400
+
+
+        
 
 @app.route("/logOut", methods= ["POST", "GET"])
 @cross_origin(supports_credentials=True)
@@ -108,7 +119,10 @@ def current_user():
     if request.method =='GET':
         response = supabase.auth.get_user()
         email = response.user.email
-        user_information = {'email': email}
+        profile_table = supabase.table("profile").select("*").execute()
+        name = profile_table.data[0]['display_name']
+        pfp = profile_table.data[0]['pfp']
+        user_information = {'name': name, 'email': email, 'pfp': pfp}
         return jsonify(user_information), 200
     return jsonify({'message': 'Invalid request method'}), 400
 
