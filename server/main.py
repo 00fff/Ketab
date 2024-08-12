@@ -4,7 +4,6 @@ from supabase import create_client
 from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 import os
-from models import db
 from dotenv import load_dotenv
 from google.cloud import vision
 from google.cloud.vision_v1 import types
@@ -134,11 +133,11 @@ def createBook():
         title = request.form.get('title')
         description = request.form.get('description')
         response = (
-    supabase.table("books")
-    .insert({"id": 1, "title": title, 'description':description})
-    .execute()
-)
-        return jsonify({'email': title, 'password': description})
+            supabase.table("books")
+            .insert({"id": 1, "title": title, 'description':description})
+            .execute()
+        )
+        return jsonify({'title': title, 'description': description})
     
     return jsonify({'message': 'Invalid request method'}), 400
 
