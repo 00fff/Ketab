@@ -57,6 +57,13 @@ def signUp():
         password = request.form.get('password')
         # Step 1: Sign up the user
         response = supabase.auth.sign_up({"email": email, "password": password})
+        user_id = response.user.id  # Retrieve the user ID from the sign-up response
+        create_display_profile = supabase.table("profile").insert({
+        "id": user_id,
+        "display_name": username,
+        "pfp": '',
+        "description": '',
+    }).execute()
         jwt_token = jwt.encode({"email": email, "password": password, 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=30)}, "secret", algorithm="HS256")
         session['jwt_token'] = jwt_token
         return jsonify({'message': 'Account Succefully Created', 'jwt_token': jwt_token}), 200
