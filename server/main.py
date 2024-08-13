@@ -141,6 +141,22 @@ def createBook():
     
     return jsonify({'message': 'Invalid request method'}), 400
 
+@app.route('/addPage', methods=['POST'])
+@cross_origin(supports_credentials=True)
+def addPage():
+    if request.method =='POST':
+        book = request.form.get('book')
+        img = request.form.get('img')
+        translated_img = request.form.get('img')
+        response = (
+            supabase.table("page")
+            .insert({"book_id": book, "img": img, "translated_img": translated_img})
+            .execute()
+        )
+        return jsonify({"book_id": book, "img": img, "translated_img": translated_img})
+    return jsonify({'message': 'Invalid request method'}), 400
+
+    
 
 
 @app.route("/upload", methods=['GET', 'POST'])
