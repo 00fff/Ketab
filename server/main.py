@@ -180,7 +180,7 @@ def addPage():
 def listBooks():
     if request.method =='GET':
         user_id = session['user_id']
-        response = supabase.table("books").select("title").eq("user_id", user_id).execute()
+        response = supabase.table("books").select("title", "description").eq("user_id", user_id).execute()
         # response = supabase.table("page").select("img, translated_img").eq("book_id", book_id).execute()
     return jsonify({'response': response.data}), 200
 

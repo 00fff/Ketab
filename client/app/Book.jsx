@@ -10,6 +10,7 @@ const Book = () => {
     <ScrollView>
     <View>
       <Text>{param1}</Text>
+      <Text>{param2}</Text>
     </View>
     </ScrollView>
     </SafeAreaView>
