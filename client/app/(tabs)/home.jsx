@@ -27,8 +27,12 @@ const Home = () => {
 
   const showBook = (title) => {
     console.log(title);
-    navigation.navigate('Book'); // Navigate to the "Book" screen
+    navigation.navigate('Book', { // Pass the name of the screen (route) as a string
+      param1: title,
+      param2: 'value2',
+    });
   };
+  
 
   useEffect(() => {
     fetchBooks();

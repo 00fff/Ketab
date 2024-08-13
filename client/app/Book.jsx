@@ -1,14 +1,15 @@
 import React from 'react';
 import { ScrollView, SafeAreaView, View, TextInput, Text, TouchableOpacity} from 'react-native';
 import { CameraView, CameraType, useCameraPermissions} from 'expo-camera';
-import { useNavigation } from '@react-navigation/native'; // Import the useNavigation hook
+import { useRoute } from '@react-navigation/native'; // Import useRoute
 const Book = () => {
-    const router = useNavigation();
+    const route = useRoute(); // Get the route object
+  const { param1, param2 } = route.params; // Access the parameters
   return (
     <SafeAreaView>
     <ScrollView>
     <View>
-      <Text>Book</Text>
+      <Text>{param1}</Text>
     </View>
     </ScrollView>
     </SafeAreaView>
