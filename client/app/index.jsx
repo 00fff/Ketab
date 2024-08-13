@@ -39,7 +39,7 @@ const StartPage = () => {
   return (
     <SafeAreaView style={{ backgroundColor: "#0E3B43", flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <View>
-        <Text style={{ fontWeight: '900', fontSize: 40, color: '#FFF' }}>Welcome To Ketab</Text> {/* Display a welcome message */}
+      <Text style={{ fontWeight: '900', fontSize: 40, color: '#FFF' }}>Welcome To Ketab</Text>
       </View>
       {/* Custom button to navigate to the Sign Up page */}
       <CustomButton text="Sign In" onPress={() => router.push('/SignUp')} />
