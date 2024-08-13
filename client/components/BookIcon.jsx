@@ -13,12 +13,12 @@ const BookIcon = ({ title, onPressed }) => {
 
 const styles = StyleSheet.create({
   button: {
-    padding: 20,
+    padding: 10,
     margin: 10, // Added margin for spacing
   },
   iconContainer: {
-    height: 100,
-    width: 100,
+    height: 80,
+    width: 80,
     backgroundColor: '#312509',
     borderRadius: 10,
     justifyContent: 'center',

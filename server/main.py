@@ -150,9 +150,10 @@ def createBook():
     if request.method == 'POST':
         title = request.form.get('title')
         description = request.form.get('description')
+        id = session['user_id']
         response = (
             supabase.table("books")
-            .insert({"id": 1, "title": title, 'description':description})
+            .insert({"title": title, 'description':description, 'user_id': id})
             .execute()
         )
         return jsonify({'title': title, 'description': description})
