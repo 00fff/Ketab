@@ -55,18 +55,33 @@ def signUp():
         username = request.form.get('username')
         email = request.form.get('email')
         password = request.form.get('password')
-        # Step 1: Sign up the user
-        response = supabase.auth.sign_up({"email": email, "password": password})
-        user_id = response.user.id  # Retrieve the user ID from the sign-up response
-        create_display_profile = supabase.table("profile").insert({
-        "id": user_id,
-        "display_name": username,
-        "pfp": '',
-        "description": '',
-    }).execute()
-        jwt_token = jwt.encode({"email": email, "password": password, 'exp': datetime.datetime.utcnow() + datetime.timedelta(days=30)}, "secret", algorithm="HS256")
-        session['jwt_token'] = jwt_token
-        return jsonify({'message': 'Account Succefully Created', 'jwt_token': jwt_token}), 200
+        try:
+            # Sign up the user
+            response = supabase.auth.sign_up({"email": email, "password": password})
+            user_id = response.user.id  # Retrieve the user ID from the sign-up response
+
+            # Create user profile
+            supabase.table("profile").insert({
+                "id": user_id,
+                "display_name": username,
+                "pfp": '',
+                "description": '',
+            }).execute()
+
+            # Generate JWT token
+            jwt_token = jwt.encode({
+                "email": email,
+                'user_id': user_id,
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=30)
+            }, "your_jwt_secret", algorithm="HS256")
+
+            # Store JWT token and user ID in session
+            session['jwt_token'] = jwt_token
+            session['user_id'] = user_id
+
+            return jsonify({'message': 'Account Successfully Created', 'jwt_token': jwt_token}), 200
+        except AuthApiError as e:
+            return jsonify({'message': f'Error during sign up: {str(e)}'}), 400
     return jsonify({'message': 'Invalid request method'}), 400
 
 @app.route('/token', methods=['POST', 'GET'])
@@ -87,12 +102,14 @@ def signIn():
             password = request.form.get('password')
             # Authenticate with Supabase
             login = supabase.auth.sign_in_with_password({"email": email, "password": password})
+            user_id = login.user.id
             utc_now = datetime.datetime.now(datetime.timezone.utc)
             # Generate JWT token (don't include password in the token)
             jwt_token = jwt.encode(
-                {"email": email, "exp": utc_now + datetime.timedelta(days=30)}, "your_jwt_secret", algorithm="HS256")
+                {"email": email, 'user_id': user_id, "exp": utc_now + datetime.timedelta(days=30)}, "your_jwt_secret", algorithm="HS256")
             # Store JWT token in session
-            session['jwt_token'] = jwt_token
+            session['jwt_token'] = jwt_token 
+            session['user_id'] = user_id
             return jsonify({'message': 'Sign in successful', 'jwt_token': jwt_token}), 200
     except AuthApiError as e:
             # Handle specific authentication errors
@@ -109,6 +126,7 @@ def signIn():
 def logOut():
     if request.method =='POST':
         response = supabase.auth.sign_out()
+        session.pop()
         return jsonify({'message': 'Succefully Logged Out'}), 200
     return jsonify({'message': 'Invalid request method'}), 400
 
@@ -156,7 +174,21 @@ def addPage():
         return jsonify({"book_id": book, "img": img, "translated_img": translated_img})
     return jsonify({'message': 'Invalid request method'}), 400
 
-    
+@app.route('/listBooks', methods=['GET', 'POST'])
+@cross_origin(supports_credentials=True)
+def listBooks():
+    if request.method =='GET':
+        user_id = session['user_id']
+        response = supabase.table("books").select("title").eq("user_id", user_id).execute()
+        # response = supabase.table("page").select("img, translated_img").eq("book_id", book_id).execute()
+    return jsonify({'response': response.data}), 200
+
+@app.route('/listPages', methods=['POST', 'GET'])
+@cross_origin(supports_credentials=True)
+def listPages():
+    if request.method == 'GET':
+        response = supabase.table("page").select("img", "translated_img").eq("book_id", 1).execute()
+    return jsonify({'response': response.data}), 200
 
 
 @app.route("/upload", methods=['GET', 'POST'])
