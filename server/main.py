@@ -180,7 +180,7 @@ def addPage():
 def listBooks():
     if request.method =='GET':
         user_id = session['user_id']
-        response = supabase.table("books").select("title", "description").eq("user_id", user_id).execute()
+        response = supabase.table("books").select("title", "description", "id").eq("user_id", user_id).execute()
         # response = supabase.table("page").select("img, translated_img").eq("book_id", book_id).execute()
     return jsonify({'response': response.data}), 200
 
@@ -188,7 +188,9 @@ def listBooks():
 @cross_origin(supports_credentials=True)
 def listPages():
     if request.method == 'GET':
-        response = supabase.table("page").select("img", "translated_img").eq("book_id", 1).execute()
+        book_id = request.args.get('book_id')
+        print(book_id)
+        response = supabase.table("page").select("img", "translated_img").eq("book_id", book_id).execute()
     return jsonify({'response': response.data}), 200
 
 

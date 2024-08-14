@@ -25,11 +25,12 @@ const Home = () => {
     }
   };
 
-  const showBook = (title, description) => {
-    console.log(title);
-    navigation.navigate('Book', { // Pass the name of the screen (route) as a string
+  const showBook = (title, description, id) => {
+    console.log(`Navigating to Book with ID: ${id}`);
+    navigation.navigate('Book', {
       param1: title,
       param2: description,
+      param3: id,
     });
   };
   
@@ -46,7 +47,7 @@ const Home = () => {
         </View>
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
           {books.map((book, index) => (
-            <BookIcon key={index} title={book.title} onPressed={() => showBook(book.title, book.description)} />
+            <BookIcon key={index} title={book.title} onPressed={() => showBook(book.title, book.description, book.id)} />
           ))}
         </View>
         <TouchableOpacity>
