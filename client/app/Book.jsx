@@ -2,6 +2,7 @@ import React from 'react';
 import { ScrollView, SafeAreaView, View, TextInput, Text, TouchableOpacity} from 'react-native';
 import { CameraView, CameraType, useCameraPermissions} from 'expo-camera';
 import { useRoute } from '@react-navigation/native'; // Import useRoute
+import Page from '../components/Page'
 const Book = () => {
     const route = useRoute(); // Get the route object
   const { param1, param2 } = route.params; // Access the parameters
@@ -11,6 +12,7 @@ const Book = () => {
     <View>
       <Text>{param1}</Text>
       <Text>{param2}</Text>
+      <Page img={}/>
     </View>
     </ScrollView>
     </SafeAreaView>
