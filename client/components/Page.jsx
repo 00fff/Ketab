@@ -63,7 +63,7 @@ const Page = ({ book_id }) => {
         {translate ? <Image
           source={{ uri: pages[currentPage]?.img || '' }}
           style={{ width: '80%', height: 600, resizeMode: 'contain' }}
-        /> : <Text>{pages[currentPage]?.translated_img}</Text>}
+        /> : <View style={{width: '80%', height: 600, borderColor: "red", borderWidth: 5, borderCurve: 50}}><Text>{pages[currentPage]?.translated_img}</Text></View>}
         
         <View style={{ bottom: 90,flexDirection: 'row', marginTop: 20, width: '25%', justifyContent: 'center', paddingHorizontal: 20, position: 'absolute', height: 0}}>
           <TouchableOpacity style={{ padding: 5 }} onPress={() => BackPage()}>
