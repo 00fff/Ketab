@@ -3,13 +3,14 @@ import { ScrollView, SafeAreaView, View, TextInput, Text, TouchableOpacity} from
 import { CameraView, CameraType, useCameraPermissions} from 'expo-camera';
 import { useRoute } from '@react-navigation/native'; // Import useRoute
 import Page from '../components/Page'
+import { Ionicons } from 'react-native-vector-icons';
 const Book = () => {
     const route = useRoute(); // Get the route object
   const { param1, param2, param3 } = route.params; // Access the parameters
   return (
     <SafeAreaView>
     <ScrollView>
-    <View>
+    <View style={{display: 'flex'}}>
       <Text>{param1}</Text>
       <Text>{param2}</Text>
       <Text>{param3}</Text>
