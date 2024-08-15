@@ -5,6 +5,7 @@ import { Ionicons } from 'react-native-vector-icons';
 
 const Page = ({ book_id }) => {
   const [pageCount, setPageCount] = useState(0)
+  const [translate, setTranslate] = useState(false)
   const [pages, setPages] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
 
@@ -17,6 +18,7 @@ const Page = ({ book_id }) => {
         },
         withCredentials: true
       });
+      
       const data = response.data.response;
       console.log('API Response:', data);
       setPages(data);
@@ -40,10 +42,14 @@ const Page = ({ book_id }) => {
     } else {
       setCurrentPage(0)
     }
-    
+  }
+  const Translate = () => {
+    setTranslate(!translate)
+    console.log(translate)
   }
   useEffect(() => {
     fetchBooks();
+    setTranslate(true)
     const intervalId = setInterval(() => {
       fetchBooks();
     }, 3600000);
@@ -53,16 +59,17 @@ const Page = ({ book_id }) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Image
+      <Text>{currentPage}</Text>  
+        {translate ? <Image
           source={{ uri: pages[currentPage]?.img || '' }}
           style={{ width: '80%', height: 600, resizeMode: 'contain' }}
-        />
-        <View style={{ bottom: 90,flexDirection: 'row', marginTop: 20, width: '25%', justifyContent: 'center', paddingHorizontal: 20 }}>
-          <Text>{currentPage}</Text>
+        /> : <Text>{pages[currentPage]?.translated_img}</Text>}
+        
+        <View style={{ bottom: 90,flexDirection: 'row', marginTop: 20, width: '25%', justifyContent: 'center', paddingHorizontal: 20, position: 'absolute', height: 0}}>
           <TouchableOpacity style={{ padding: 5 }} onPress={() => BackPage()}>
             <Ionicons name="caret-back-outline" color={"black"} size={60} />
           </TouchableOpacity>
-          <TouchableOpacity style={{ padding: 5 }}>
+          <TouchableOpacity style={{ padding: 5 }} onPress={() => Translate()}>
             <Ionicons name="sync-circle-outline" color={"black"} size={60} />
           </TouchableOpacity>
           <TouchableOpacity style={{ padding: 5 }} onPress={() => NextPage()}>

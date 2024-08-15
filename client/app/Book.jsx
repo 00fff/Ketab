@@ -11,9 +11,6 @@ const Book = () => {
     <SafeAreaView>
     <ScrollView>
     <View style={{display: 'flex'}}>
-      <Text>{param1}</Text>
-      <Text>{param2}</Text>
-      <Text>{param3}</Text>
       <Page book_id={param3}/>
     </View>
     </ScrollView>
