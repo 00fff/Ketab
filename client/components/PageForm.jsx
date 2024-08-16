@@ -2,17 +2,14 @@ import React from 'react';
 import { ScrollView, SafeAreaView, View, TextInput, Text, TouchableOpacity} from 'react-native';
 import { CameraView, CameraType, useCameraPermissions} from 'expo-camera';
 import { useRoute } from '@react-navigation/native'; // Import useRoute
-import Page from '../components/Page'
-import PageForm from '../components/PageForm'
+import Page from './Page'
 import { Ionicons } from 'react-native-vector-icons';
-const Book = () => {
-    const route = useRoute(); // Get the route object
-  const { param1, param2, param3 } = route.params; // Access the parameters
+const PageForm = () => {
   return (
-    <SafeAreaView style={{}}>
+    <SafeAreaView>
     <ScrollView>
-    <View style={{display: 'flex', }}>
-      <Page book_id={param3}/>
+    <View style={{width: 100, height: 100, backgroundColor: 'rgba(33, 14, 102)', position: 'absolute'} }>
+      <Text>Hello</Text>
     </View>
     </ScrollView>
     </SafeAreaView>
@@ -21,4 +18,4 @@ const Book = () => {
   
 };
 
-export default Book;
+export default PageForm;
