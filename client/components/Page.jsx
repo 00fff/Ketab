@@ -49,9 +49,11 @@ const Page = ({ book_id }) => {
     setTranslate(!translate);
     console.log(translate);
   };
+
   const CreateNewPage = () => {
-    console.log("hello")
-  }
+    console.log("hello");
+  };
+
   useEffect(() => {
     fetchBooks();
     setTranslate(true);
@@ -63,65 +65,67 @@ const Page = ({ book_id }) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: "#357266", }}>
-        <Text>{currentPage + 1} / {pageCount}</Text>
-        <View style={{ 
-          
-          width: '75%', 
-          height: 500, 
-          overflow: 'hidden', 
-          marginVertical: 20 // Add some margin for spacing
-        }}>
-          {translate ? (
-            <Image
-              source={{ uri: pages[currentPage]?.img || '' }}
-              style={{ width: '100%', height: '100%', resizeMode: 'contain' }}
-            />
-          ) : (
-            <View style={{
-              width: '100%',
-              borderColor: "red", 
-              borderWidth: 5, 
-              borderRadius: 20,  
-              height: '100%', 
+      <View style={{ flex: 1, backgroundColor: "#357266" }}>
+        <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Text>{currentPage + 1} / {pageCount}</Text>
+          <View style={{ 
+            width: '75%', 
+            height: 500, 
+            overflow: 'hidden', 
+            marginVertical: 20 
+          }}>
+            {translate ? (
+              <Image
+                source={{ uri: pages[currentPage]?.img || '' }}
+                style={{ width: '100%', height: '100%', resizeMode: 'contain' }}
+              />
+            ) : (
+              <View style={{
+                width: '100%',
+                borderColor: "red", 
+                borderWidth: 5, 
+                borderRadius: 20,  
+                height: '100%', 
+                justifyContent: 'center', 
+                alignItems: 'center',
+                backgroundColor: "#f0ead6",
+              }}>
+                <Text>{pages[currentPage]?.translated_img}</Text>
+              </View>
+            )}
+          </View>
+          <View style={{ flexDirection: 'row', marginTop: 20, width: '60%', justifyContent: 'space-between', paddingHorizontal: 20 }}>
+            <TouchableOpacity style={{ padding: 5 }} onPress={BackPage}>
+              <Ionicons name="caret-back-outline" color={"black"} size={60} />
+            </TouchableOpacity>
+            <TouchableOpacity style={{ padding: 5 }} onPress={Translate}>
+              <Ionicons name="sync-circle-outline" color={"black"} size={60} />
+            </TouchableOpacity>
+            <TouchableOpacity style={{ padding: 5 }} onPress={NextPage}>
+              <Ionicons name="caret-forward-outline" color={"black"} size={60} />
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+        {translate && (
+          <TouchableOpacity
+            onPress={CreateNewPage}
+            style={{ 
+              backgroundColor: "#0E3B43", 
+              width: '75%', 
+              height: 50, 
+              borderBottomLeftRadius: 25, 
+              borderBottomRightRadius: 25, 
               justifyContent: 'center', 
-              alignItems: 'center',
-              backgroundColor: "#f0ead6",
-            }}>
-              <Text>{pages[currentPage]?.translated_img}</Text>
-            </View>
-          )}
-        </View>
-        <View style={{ flexDirection: 'row', marginTop: 20, width: '60%', justifyContent: 'space-between', paddingHorizontal: 20, display: 'flex', position: 'relative'}}>
-        {translate && <TouchableOpacity
-        onPress={() => CreateNewPage()} 
-    style={{ 
-      backgroundColor: "#0E3B43", 
-      width: 304, 
-      height: 50, 
-      borderBottomLeftRadius: 25, 
-      borderBottomRightRadius: 25, 
-      justifyContent: 'center', 
-      alignItems: 'center', 
-      position: 'absolute', 
-      left: -30,
-      top: -90, // Adjust this value to position the button vertically
-      
-    }}
-  >
-    <Ionicons name="add" color={"black"} size={40} />
-  </TouchableOpacity>}
-          <TouchableOpacity style={{ padding: 5 }} onPress={BackPage}>
-            <Ionicons name="caret-back-outline" color={"black"} size={60} />
+              alignItems: 'center', 
+              alignSelf: 'center',
+              position: 'absolute', 
+              bottom: 116, // Positioned 30px from the bottom of the screen
+            }}
+          >
+            <Ionicons name="add" color={"black"} size={40} />
           </TouchableOpacity>
-          <TouchableOpacity style={{ padding: 5 }} onPress={Translate}>
-            <Ionicons name="sync-circle-outline" color={"black"} size={60} />
-          </TouchableOpacity>
-          <TouchableOpacity style={{ padding: 5 }} onPress={NextPage}>
-            <Ionicons name="caret-forward-outline" color={"black"} size={60} />
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+        )}
+      </View>
     </SafeAreaView>
   );
 };
