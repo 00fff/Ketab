@@ -3,6 +3,10 @@ from gotrue.errors import AuthApiError
 from supabase import create_client
 from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
+import base64
+import PIL.Image as Image
+import base64
+from io import BytesIO
 import os
 from dotenv import load_dotenv
 from google.cloud import vision
@@ -24,6 +28,7 @@ client = vision.ImageAnnotatorClient()
 
 # Set Up Flask App
 app = Flask(__name__)
+app.secret_key = os.getenv('SECRET_KEY')
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(__file__), 'uploads')
 # allows for React to fetch
@@ -110,6 +115,7 @@ def signIn():
             # Store JWT token in session
             session['jwt_token'] = jwt_token 
             session['user_id'] = user_id
+            print(session['user_id'])
             return jsonify({'message': 'Sign in successful', 'jwt_token': jwt_token}), 200
     except AuthApiError as e:
             # Handle specific authentication errors
@@ -126,7 +132,7 @@ def signIn():
 def logOut():
     if request.method =='POST':
         response = supabase.auth.sign_out()
-        session.pop()
+        session.clear()
         return jsonify({'message': 'Succefully Logged Out'}), 200
     return jsonify({'message': 'Invalid request method'}), 400
 
@@ -165,16 +171,14 @@ def createBook():
 def addPage():
     if request.method =='POST':
         image = request.form.get('image')
-        
+        header, image = image.split(",", 1)
+        image = base64.b64decode(image)
+        image = Image.open(BytesIO(image))
+        image = image.save('page.png')
+        id = session["user_id"]
+        file_path = f'{id}/uploaded_image.png'
+        response = supabase.storage.from_('Pages').upload(file_path, image)
         return jsonify({'message': 'yippie'}), 200
-        # img = request.form.get('img')
-        # translated_img = request.form.get('img')
-        # response = (
-        #     supabase.table("page")
-        #     .insert({"book_id": book, "img": img, "translated_img": translated_img})
-        #     .execute()
-        # )
-        # return jsonify({"book_id": book, "img": img, "translated_img": translated_img})
     return jsonify({'message': 'Invalid request method'}), 400
 
 @app.route('/listBooks', methods=['GET', 'POST'])
