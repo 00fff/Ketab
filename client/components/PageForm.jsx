@@ -1,10 +1,24 @@
 import React, { useState } from 'react';
 import { SafeAreaView, View, Text, Button, Image, StyleSheet, Touchable, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import axios from 'axios'; // Import axios for making HTTP requests
 
 const PageForm = ({ width, height, left, right, color, bottom }) => {
   const [image, setImage] = useState(null);
-
+  const CreateNewPage = async ( image ) => {
+    try {
+      const response = await axios.post("http://127.0.0.1:8080/addPage", {
+        image: image // Pass the book_id parameter
+      }, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // Set the content type to JSON
+        },
+        withCredentials: true, // Include credentials in the request
+      });
+    } catch (error) {
+      console.error(error); // Log any errors that occur during the request
+    }
+  };
   const pickImage = async () => {
     // Request permissions if needed
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -23,6 +37,7 @@ const PageForm = ({ width, height, left, right, color, bottom }) => {
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
+      console.log(image)
     }
   };
 
@@ -44,6 +59,7 @@ const PageForm = ({ width, height, left, right, color, bottom }) => {
             alignItems: 'center'
             
           }}
+          onPress={() => CreateNewPage(image)}
         >Submit</TouchableOpacity>
       </View>
     </SafeAreaView>
