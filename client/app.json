@@ -37,11 +37,13 @@
     "plugins": [
       "expo-router",
       "expo-secure-store",
+      "expo-image-picker",
       [
         "expo-secure-store",
         {
           "configureAndroidBackup": true,
-          "faceIDPermission": "Allow $(PRODUCT_NAME) to access your Face ID biometric data."
+          "faceIDPermission": "Allow $(PRODUCT_NAME) to access your Face ID biometric data.",
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
       ]
     ],
