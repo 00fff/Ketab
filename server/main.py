@@ -4,9 +4,8 @@ from supabase import create_client
 from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 import base64
-import PIL.Image as Image
-import base64
-from io import BytesIO
+from PIL import Image
+import io
 import os
 from dotenv import load_dotenv
 from google.cloud import vision
@@ -165,20 +164,19 @@ def createBook():
         return jsonify({'title': title, 'description': description})
     
     return jsonify({'message': 'Invalid request method'}), 400
-
 @app.route('/addPage', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def addPage():
-    if request.method =='POST':
-        image = request.form.get('image')
-        header, image = image.split(",", 1)
-        image = base64.b64decode(image)
-        image = Image.open(BytesIO(image))
-        image = image.save('page.png')
-        id = session["user_id"]
-        file_path = f'{id}/uploaded_image.png'
-        response = supabase.storage.from_('Pages').upload(file_path, image)
-        return jsonify({'message': 'yippie'}), 200
+    if request.method == 'POST':
+        image_data = request.form.get('image')
+        # Decode the base64 image data
+        image_bytes = base64.b64decode(image_data)
+        # Define the file path and upload
+        user_id = session.get("user_id")
+        file_path = f'{user_id}/uploaded_image.png'
+        response = supabase.storage.from_('Pages').upload(file_path, image_bytes, {
+                        'Content-Type': 'image/png'
+                    })
     return jsonify({'message': 'Invalid request method'}), 400
 
 @app.route('/listBooks', methods=['GET', 'POST'])
