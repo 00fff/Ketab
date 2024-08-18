@@ -168,15 +168,34 @@ def createBook():
 @cross_origin(supports_credentials=True)
 def addPage():
     if request.method == 'POST':
+        # Get the base64 encoded image string from the request
         image_data = request.form.get('image')
-        # Decode the base64 image data
-        image_bytes = base64.b64decode(image_data)
-        # Define the file path and upload
-        user_id = session.get("user_id")
-        file_path = f'{user_id}/uploaded_image.png'
-        response = supabase.storage.from_('Pages').upload(file_path, image_bytes, {
-                        'Content-Type': 'image/png'
-                    })
+        if image_data:
+            # Extract base64 data from the string
+            base64_data = image_data.split(',')[1]
+            
+            # Decode the base64 data
+            image_bytes = base64.b64decode(base64_data)
+            
+            # Open the image with PIL and ensure it's valid
+            
+            
+            # Save the image to a BytesIO object in PNG format
+            # output = io.BytesIO()
+            # image.save(output, format='PNG')
+            # image_bytes = output.getvalue()
+            
+            # Define the file path and upload
+            user_id = session.get("user_id")
+            file_path = f'{user_id}/uploaded_image.png'
+            
+            # Upload to Supabase
+            response = supabase.storage.from_('Pages').upload(file_path, image_bytes)
+
+            return jsonify({'message': 'Image uploaded successfully'}), 200
+        else:
+            return jsonify({'message': 'No image data provided'}), 400
+    
     return jsonify({'message': 'Invalid request method'}), 400
 
 @app.route('/listBooks', methods=['GET', 'POST'])
