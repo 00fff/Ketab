@@ -190,6 +190,7 @@ def addPage():
             file_path = f'{user_id}/uploaded_image.png'
             
             # Upload to Supabase
+            translate(image_bytes)
             response = supabase.storage.from_('Pages').upload(file_path, image_bytes)
 
             return jsonify({'message': 'Image uploaded successfully'}), 200
@@ -255,19 +256,18 @@ def upload():
                 return "<h1>no image path</h1>"
     return render_template("index.html")
 def translate(img):
+    user_id = session.get("user_id")
+    client = vision.ImageAnnotatorClient()
     image = vision.Image(content=img)
     # Perform text detection
     response = client.document_text_detection(image=image)
     # Get the text annotations
     fullText = response.full_text_annotation.text
-    filename = filename.rsplit('.', 1)[0]
+    filename = "hello"
     filename = f"{filename}_translated.txt"
-    
-
-                # Demo_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                # Demo_file = open(f"{filename}", "w")
-                # Demo_file.write(fullText)
-                # Demo_file.close()
+    file_path = f'{user_id}/{filename}'
+    text_bytes = fullText.encode('utf-8')
+    response = supabase.storage.from_('Pages').upload(file_path, text_bytes)
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=8080)
