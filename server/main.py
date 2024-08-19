@@ -169,35 +169,62 @@ def createBook():
 def addPage():
     if request.method == 'POST':
         # Get the base64 encoded image string from the request
-        image_data = request.form.get('image')
+        image_data = request.form.get('image') 
         if image_data:
-            # Extract base64 data from the string
-            base64_data = image_data.split(',')[1]
-            
-            # Decode the base64 data
+            # Extract base64 data from the string (the part after the comma)
+            base64_data = image_data.split(',')[1] 
+            # Decode the base64 data into bytes
             image_bytes = base64.b64decode(base64_data)
-            
-            # Open the image with PIL and ensure it's valid
-            
-            
-            # Save the image to a BytesIO object in PNG format
-            # output = io.BytesIO()
-            # image.save(output, format='PNG')
-            # image_bytes = output.getvalue()
-            
-            # Define the file path and upload
+            # Optionally, you could open the image with PIL to verify its validity
+            # image = Image.open(io.BytesIO(image_bytes))
+            # Ensure the image is valid (uncomment if needed)
+            # image.verify()
+            # Define the file path where the image will be stored
             user_id = session.get("user_id")
             file_path = f'{user_id}/uploaded_image.png'
             
-            # Upload to Supabase
-            translate(image_bytes)
-            response = supabase.storage.from_('Pages').upload(file_path, image_bytes)
+            # Perform text extraction from the image
+            text = translate(image_bytes)
+            print(text)
 
-            return jsonify({'message': 'Image uploaded successfully'}), 200
+            # Upload the image bytes to Supabase storage
+            response = supabase.storage.from_('Pages').upload(file_path, image_bytes)
+            res = supabase.storage.from_('Pages').get_public_url(file_path)
+            response = (supabase.table("page")
+            .insert({"book_id": 1, "img": res, "translated_img": text})
+            .execute()
+            )
+
+            if response.status_code == 200:
+                return jsonify({'message': 'Image uploaded successfully'}), 200
+            else:
+                return jsonify({'message': 'Failed to upload image'}), 500
         else:
             return jsonify({'message': 'No image data provided'}), 400
     
     return jsonify({'message': 'Invalid request method'}), 400
+
+def translate(img):
+    user_id = session.get("user_id")
+    # Initialize the Vision API client
+    client = vision.ImageAnnotatorClient()
+    # Create a Vision API image object from the byte data
+    image = vision.Image(content=img)
+    # Perform text detection on the image
+    response = client.document_text_detection(image=image)
+    # Extract the full text annotation from the response
+    full_text = response.full_text_annotation.text
+    # Create a filename for the text file
+    filename = "hello"
+    translated_filename = f"{filename}_translated.txt"
+    # Define the file path where the text will be stored
+    file_path = f'{user_id}/{translated_filename}'
+    print(full_text)
+    # # Convert the extracted text to bytes
+    # text_bytes = full_text.encode('utf-8')
+    # # Upload the text bytes to Supabase storage
+    # response = supabase.storage.from_('Pages').upload(file_path, text_bytes)
+    return full_text
 
 @app.route('/listBooks', methods=['GET', 'POST'])
 @cross_origin(supports_credentials=True)
@@ -218,56 +245,44 @@ def listPages():
     return jsonify({'response': response.data}), 200
 
 
-@app.route("/upload", methods=['GET', 'POST'])
-@cross_origin(supports_credentials=True)
-def upload():
-    if request.method == 'POST':
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['file']
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            image_path = save_path
-            if image_path:
-                with open(image_path, 'rb') as image_file:
-                    content = image_file.read()
-                image = vision.Image(content=content)
-                # Perform text detection
-                response = client.document_text_detection(image=image)
-                # Get the text annotations
-                fullText = response.full_text_annotation.text
-                filename = filename.rsplit('.', 1)[0]
-                filename = f"{filename}_translated.txt"
-                translated_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                # Save the detected text to the new file
-                with open(translated_path, 'w') as text_file:
-                    text_file.write(fullText)
-                # Demo_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-                # Demo_file = open(f"{filename}", "w")
-                # Demo_file.write(fullText)
-                # Demo_file.close()
-            else:
-                return "<h1>no image path</h1>"
-    return render_template("index.html")
-def translate(img):
-    user_id = session.get("user_id")
-    client = vision.ImageAnnotatorClient()
-    image = vision.Image(content=img)
-    # Perform text detection
-    response = client.document_text_detection(image=image)
-    # Get the text annotations
-    fullText = response.full_text_annotation.text
-    filename = "hello"
-    filename = f"{filename}_translated.txt"
-    file_path = f'{user_id}/{filename}'
-    text_bytes = fullText.encode('utf-8')
-    response = supabase.storage.from_('Pages').upload(file_path, text_bytes)
+# @app.route("/upload", methods=['GET', 'POST'])
+# @cross_origin(supports_credentials=True)
+# def upload():
+#     if request.method == 'POST':
+#         if 'file' not in request.files:
+#             flash('No file part')
+#             return redirect(request.url)
+#         file = request.files['file']
+#         if file.filename == '':
+#             flash('No selected file')
+#             return redirect(request.url)
+#         if file and allowed_file(file.filename):
+#             filename = secure_filename(file.filename)
+#             save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+#             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+#             image_path = save_path
+#             if image_path:
+#                 with open(image_path, 'rb') as image_file:
+#                     content = image_file.read()
+#                 image = vision.Image(content=content)
+#                 # Perform text detection
+#                 response = client.document_text_detection(image=image)
+#                 # Get the text annotations
+#                 fullText = response.full_text_annotation.text
+#                 filename = filename.rsplit('.', 1)[0]
+#                 filename = f"{filename}_translated.txt"
+#                 translated_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+#                 # Save the detected text to the new file
+#                 with open(translated_path, 'w') as text_file:
+#                     text_file.write(fullText)
+#                 # Demo_file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+#                 # Demo_file = open(f"{filename}", "w")
+#                 # Demo_file.write(fullText)
+#                 # Demo_file.close()
+#             else:
+#                 return "<h1>no image path</h1>"
+#     return render_template("index.html")
+
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=8080)
