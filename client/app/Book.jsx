@@ -43,7 +43,7 @@ const Book = () => {
         <View style={{ position: 'relative', flex: 1 }}>
           {showForm && (
             // Conditionally render the PageForm component if showForm is true
-            <PageForm width={300} height={350} color={'#a3bbad'} left={50} right={0} bottom={250}/>
+            <PageForm width={300} height={350} color={'#a3bbad'} left={50} right={0} bottom={250} id={param3}/>
           )}
           <Page book_id={param3} createPage={printMessage} /> {/* Render the Page component */}
         </View>

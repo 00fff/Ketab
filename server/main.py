@@ -169,6 +169,8 @@ def createBook():
 def addPage():
     if request.method == 'POST':
         # Get the base64 encoded image string from the request
+        id = request.form.get("id")
+        print(f"Hello {id}")
         image_data = request.form.get('image') 
         if image_data:
             # Extract base64 data from the string (the part after the comma)

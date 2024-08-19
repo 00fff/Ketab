@@ -3,12 +3,13 @@ import { SafeAreaView, View, Text, Button, Image, StyleSheet, Touchable, Touchab
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios'; // Import axios for making HTTP requests
 
-const PageForm = ({ width, height, left, right, color, bottom }) => {
+const PageForm = ({ width, height, left, right, color, bottom, id}) => {
   const [image, setImage] = useState(null);
-  const CreateNewPage = async ( image ) => {
+  const CreateNewPage = async ( image, id) => {
     try {
       const response = await axios.post("http://127.0.0.1:8080/addPage", {
-        image: image // Pass the book_id parameter
+        image: image, // Pass the book_id parameter
+        id: id,
       }, {
         headers: {
           'Content-Type': 'multipart/form-data', // Set the content type to JSON
@@ -59,7 +60,7 @@ const PageForm = ({ width, height, left, right, color, bottom }) => {
             alignItems: 'center'
             
           }}
-          onPress={() => CreateNewPage(image)}
+          onPress={() => CreateNewPage(image, id)}
         >Submit</TouchableOpacity>
       </View>
     </SafeAreaView>
