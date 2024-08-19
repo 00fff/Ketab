@@ -170,7 +170,6 @@ def addPage():
     if request.method == 'POST':
         # Get the base64 encoded image string from the request
         id = request.form.get("id")
-        print(f"Hello {id}")
         image_data = request.form.get('image') 
         if image_data:
             # Extract base64 data from the string (the part after the comma)
@@ -183,7 +182,7 @@ def addPage():
             # image.verify()
             # Define the file path where the image will be stored
             user_id = session.get("user_id")
-            file_path = f'{user_id}/uploaded_image.png'
+            file_path = f'{user_id}/{id}/uploaded_image.png'
             
             # Perform text extraction from the image
             text = translate(image_bytes)
@@ -196,11 +195,6 @@ def addPage():
             .insert({"book_id": 1, "img": res, "translated_img": text})
             .execute()
             )
-
-            if response.status_code == 200:
-                return jsonify({'message': 'Image uploaded successfully'}), 200
-            else:
-                return jsonify({'message': 'Failed to upload image'}), 500
         else:
             return jsonify({'message': 'No image data provided'}), 400
     
