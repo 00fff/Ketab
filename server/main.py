@@ -212,7 +212,7 @@ def deleteBook():
         user_id = user_id = session.get("user_id")
         file_path = f'{user_id}/{id}'
         bucket = supabase.storage.from_('Pages')
-        list = bucket.list(path='file_path')
+        list = bucket.list(path=file_path)
         print(list)
         delete_response = supabase.storage.from_("Pages").remove(file_path)
         print(delete_response)
