@@ -45,7 +45,7 @@ const PageForm = ({ width, height, left, right, color, bottom, id}) => {
   return (
     <SafeAreaView style={[styles.container, { width, height, left, right, backgroundColor: color, bottom }]}>
       <View style={styles.innerContainer}>
-        <Text style={styles.label}>Pick an image:</Text>
+        <Text style={styles.label}>Choose An Image For Your New Page:</Text>
         <Button title="Choose Image" onPress={pickImage} />
         {image && (
           <Image source={{ uri: image }} style={styles.image} />
