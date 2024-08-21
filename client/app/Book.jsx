@@ -4,16 +4,20 @@ import axios from 'axios'; // Import axios for making HTTP requests
 import { useRoute } from '@react-navigation/native'; // Import useRoute for accessing route parameters
 import Page from '../components/Page'; // Import Page component
 import PageForm from '../components/PageForm'; // Import PageForm component
+import SettingsForm from '../components/SettingsForm'; // Import SettingsForm component
 import { Ionicons } from 'react-native-vector-icons'; // Import Ionicons for icons
 
 const Book = () => {
   const [showForm, setShowForm] = useState(false); // State to toggle the visibility of PageForm
-
+  const [toggleSettings, settoggleSettings] = useState(false)
   // Function to toggle the visibility of PageForm and log the current state
-  const printMessage = () => {
+  const ToggleShowForm = () => {
     setShowForm(!showForm);
-    console.log(showForm);
+
   };
+  const ToggleSettings = () => {
+    settoggleSettings(!toggleSettings)
+  }
 
   // Function to create a new page via an API request
   const CreateNewPage = async () => {
@@ -41,20 +45,21 @@ const Book = () => {
     <SafeAreaView style={{ flex: 1 }}>
       
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-      <TouchableOpacity style={{
+      <TouchableOpacity onPress={() => ToggleSettings()} style={{
           backgroundColor: 'transparent',
           position: 'absolute', // Use absolute positioning
           right: 10,            // Adjust right distance from the edge
           top: 10,              // Adjust top distance from the top
-          zIndex:12,
+          zIndex:2,
         }}><Ionicons name="settings-outline"  color={'#a3bbad'} size={25}/></TouchableOpacity>
+        {toggleSettings && (<SettingsForm  width={300} height={350} color={'#a3bbad'} left={50} right={0} bottom={250} id={param3}/>)}
         <View style={{ position: 'relative', flex: 1 }}>
           {showForm && (
             // Conditionally render the PageForm component if showForm is true
             <PageForm width={300} height={350} color={'#a3bbad'} left={50} right={0} bottom={250} id={param3}/>
           )}
           
-          <Page book_id={param3} createPage={printMessage} /> {/* Render the Page component */}
+          <Page book_id={param3} createPage={ToggleShowForm} /> {/* Render the Page component */}
         </View>
       </ScrollView>
     </SafeAreaView>
