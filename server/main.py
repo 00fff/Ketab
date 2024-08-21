@@ -192,7 +192,7 @@ def addPage():
             response = supabase.storage.from_('Pages').upload(file_path, image_bytes)
             res = supabase.storage.from_('Pages').get_public_url(file_path)
             response = (supabase.table("page")
-            .insert({"book_id": 1, "img": res, "translated_img": text})
+            .insert({"book_id": id, "img": res, "translated_img": text})
             .execute()
             )
         else:
