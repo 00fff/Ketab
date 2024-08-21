@@ -39,12 +39,21 @@ const Book = () => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+      <TouchableOpacity style={{
+          backgroundColor: 'transparent',
+          position: 'absolute', // Use absolute positioning
+          right: 10,            // Adjust right distance from the edge
+          top: 10,              // Adjust top distance from the top
+          zIndex:12,
+        }}><Ionicons name="settings-outline"  color={'#a3bbad'} size={25}/></TouchableOpacity>
         <View style={{ position: 'relative', flex: 1 }}>
           {showForm && (
             // Conditionally render the PageForm component if showForm is true
             <PageForm width={300} height={350} color={'#a3bbad'} left={50} right={0} bottom={250} id={param3}/>
           )}
+          
           <Page book_id={param3} createPage={printMessage} /> {/* Render the Page component */}
         </View>
       </ScrollView>

@@ -87,7 +87,7 @@ const Page = ({ book_id, createPage }) => {
               // Render translated content if not in translate mode
               <View style={{
                 width: '100%',
-                borderColor: "red", 
+                borderColor: "#312509", 
                 borderWidth: 5, 
                 borderRadius: 20,  
                 height: '100%', 
