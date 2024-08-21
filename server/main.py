@@ -1,3 +1,4 @@
+from unicodedata import name
 from flask import Flask, render_template, request, flash, redirect, url_for, jsonify, session
 from gotrue.errors import AuthApiError
 from supabase import create_client
@@ -161,6 +162,7 @@ def createBook():
             .insert({"title": title, 'description':description, 'user_id': id})
             .execute()
         )
+
         return jsonify({'title': title, 'description': description})
     
     return jsonify({'message': 'Invalid request method'}), 400
@@ -191,7 +193,7 @@ def addPage():
             # Upload the image bytes to Supabase storage
             response = supabase.storage.from_('Pages').upload(file_path, image_bytes)
             res = supabase.storage.from_('Pages').get_public_url(file_path)
-            response = (supabase.table("page")
+            createPage = (supabase.table("page")
             .insert({"book_id": id, "img": res, "translated_img": text})
             .execute()
             )
@@ -199,6 +201,22 @@ def addPage():
             return jsonify({'message': 'No image data provided'}), 400
     
     return jsonify({'message': 'Invalid request method'}), 400
+
+@app.route('/deleteBook', methods=['POST', 'GET'])
+@cross_origin(supports_credentials=True)
+def deleteBook():
+    if request.method == 'POST':
+        id = request.form.get('id')
+        print(id)
+        response = supabase.table('books').delete().eq('id', id).execute()
+        user_id = user_id = session.get("user_id")
+        file_path = f'{user_id}/{id}'
+        bucket = supabase.storage.from_('Pages')
+        list = bucket.list(path='file_path')
+        print(list)
+        delete_response = supabase.storage.from_("Pages").remove(file_path)
+        print(delete_response)
+        return jsonify("Book Succefully Deleted"), 200
 
 def translate(img):
     user_id = session.get("user_id")

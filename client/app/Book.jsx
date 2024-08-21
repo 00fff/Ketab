@@ -8,6 +8,9 @@ import SettingsForm from '../components/SettingsForm'; // Import SettingsForm co
 import { Ionicons } from 'react-native-vector-icons'; // Import Ionicons for icons
 
 const Book = () => {
+  const route = useRoute(); // Get the route object to access route parameters
+
+  const { param1, param2, param3 } = route.params; // Destructure the parameters from the route
   const [showForm, setShowForm] = useState(false); // State to toggle the visibility of PageForm
   const [toggleSettings, settoggleSettings] = useState(false)
   // Function to toggle the visibility of PageForm and log the current state
@@ -18,7 +21,21 @@ const Book = () => {
   const ToggleSettings = () => {
     settoggleSettings(!toggleSettings)
   }
-
+  const DeleteBook = async () => {
+    console.log("Hello" + param3)
+    try {
+      const response = await axios.post("http://127.0.0.1:8080/deleteBook", {
+        id: param3,
+      }, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded', // Set the content type to JSON
+        },
+        withCredentials: true, // Include credentials in the request
+      });
+    } catch (error) {
+      console.error(error); // Log any errors that occur during the request
+    }
+  };
   // Function to create a new page via an API request
   const CreateNewPage = async () => {
     try {
@@ -38,8 +55,6 @@ const Book = () => {
     }
   };
 
-  const route = useRoute(); // Get the route object to access route parameters
-  const { param1, param2, param3 } = route.params; // Destructure the parameters from the route
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -52,7 +67,7 @@ const Book = () => {
           top: 10,              // Adjust top distance from the top
           zIndex:2,
         }}><Ionicons name="settings-outline"  color={'#a3bbad'} size={25}/></TouchableOpacity>
-        {toggleSettings && (<SettingsForm  width={300} height={350} color={'#a3bbad'} left={50} right={0} bottom={250} id={param3}/>)}
+        {toggleSettings && (<SettingsForm  width={300} height={350} color={'#a3bbad'} left={50} right={0} bottom={250} onPressFunction={DeleteBook}/>)}
         <View style={{ position: 'relative', flex: 1 }}>
           {showForm && (
             // Conditionally render the PageForm component if showForm is true
