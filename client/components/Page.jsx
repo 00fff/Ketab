@@ -67,6 +67,7 @@ const Page = ({ book_id, createPage }) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1, backgroundColor: "#357266" }}>
+        
         <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
           {/* Display current page number and total page count */}
           <Text>{currentPage + 1} / {pageCount}</Text>
@@ -77,12 +78,15 @@ const Page = ({ book_id, createPage }) => {
             overflow: 'hidden', 
             marginVertical: 20 
           }}>
+            
             {translate ? (
               // Render image if in translate mode
+              
               <Image
                 source={{ uri: pages[currentPage]?.img || '' }}
                 style={{ width: '100%', height: '100%', resizeMode: 'contain' }}
               />
+              
             ) : (
               // Render translated content if not in translate mode
               <View style={{
@@ -95,7 +99,8 @@ const Page = ({ book_id, createPage }) => {
                 alignItems: 'center',
                 backgroundColor: "#f0ead6",
               }}>
-                <Text>{pages[currentPage]?.translated_img}</Text>
+                <TouchableOpacity style={{position: 'absolute', top: 0, right: 0, padding: 10, }}><Ionicons name="pencil-outline" color={"black"} size={30} /></TouchableOpacity>
+                <Text style={{padding: 2}}>{pages[currentPage]?.translated_img}</Text>
               </View>
             )}
           </View>
