@@ -71,7 +71,7 @@ const Page = ({ book_id, createPage }) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1, backgroundColor: "#357266" }}>
-        {editWords && (<EditWords  changeEditState={changeEditState} width={300} height={500} color={'#a3bbad'} left={50} right={0} bottom={155} currentText={pages[currentPage]?.translated_img}/>)}
+        {editWords && (<EditWords id={pages[currentPage].id} changeEditState={changeEditState} width={300} height={500} color={'#a3bbad'} left={50} right={0} bottom={155} currentText={pages[currentPage]?.translated_img}/>)}
         <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
           {/* Display current page number and total page count */}
           <Text>{currentPage + 1} / {pageCount}</Text>
