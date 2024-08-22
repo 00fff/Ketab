@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { ScrollView, SafeAreaView, View, Image, TouchableOpacity, Text } from 'react-native';
+import { ScrollView, SafeAreaView, View, Image, TouchableOpacity, Text} from 'react-native';
 import { Ionicons } from 'react-native-vector-icons';
+import EditWords from '../components/EditWords'
 
 const Page = ({ book_id, createPage }) => {
   const [pageCount, setPageCount] = useState(0); // State to track the total number of pages
   const [translate, setTranslate] = useState(false); // State to toggle translation mode
   const [pages, setPages] = useState([]); // State to store page data
   const [currentPage, setCurrentPage] = useState(0); // State to track the current page
+  const [editWords, seteditWords] = useState(false)
 
   // Function to fetch pages from the API
   const fetchBooks = async () => {
@@ -28,7 +30,9 @@ const Page = ({ book_id, createPage }) => {
       console.error(error); // Log any errors that occur during the API request
     }
   };
-
+  const changeEditState = () => {
+    seteditWords(!editWords)
+  }
   // Function to go to the next page
   const NextPage = () => {
     const lastPage = pages.length - 1; // Calculate the index of the last page
@@ -67,7 +71,7 @@ const Page = ({ book_id, createPage }) => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1, backgroundColor: "#357266" }}>
-        
+        {editWords && (<EditWords  width={300} height={400} color={'#a3bbad'} left={50} right={0} bottom={160} currentText={pages[currentPage]?.translated_img}/>)}
         <ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
           {/* Display current page number and total page count */}
           <Text>{currentPage + 1} / {pageCount}</Text>
@@ -99,7 +103,7 @@ const Page = ({ book_id, createPage }) => {
                 alignItems: 'center',
                 backgroundColor: "#f0ead6",
               }}>
-                <TouchableOpacity style={{position: 'absolute', top: 0, right: 0, padding: 10, }}><Ionicons name="pencil-outline" color={"black"} size={30} /></TouchableOpacity>
+                <TouchableOpacity onPress={() => changeEditState()} style={{position: 'absolute', top: 0, right: 0, padding: 10, }}><Ionicons name="pencil-outline" color={"black"} size={30} /></TouchableOpacity>
                 <Text style={{padding: 2}}>{pages[currentPage]?.translated_img}</Text>
               </View>
             )}
