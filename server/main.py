@@ -229,6 +229,8 @@ def deleteBook():
         list = bucket.list(path=file_path)
         print(list)
         delete_response = supabase.storage.from_("Pages").remove(file_path)
+        # res = supabase.storage.empty_bucket(f"Pages/{file_path}")
+
         print(delete_response)
         return jsonify("Book Succefully Deleted"), 200
 
