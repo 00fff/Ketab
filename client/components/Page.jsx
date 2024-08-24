@@ -140,7 +140,7 @@ const Page = ({ book_id, createPage }) => {
               bottom: 156, // Positioned 30px from the bottom of the screen
             }}
           >
-            <Ionicons name="add" color={"black"} size={40} />
+            <Ionicons name="add" color={"White"} size={40} />
           </TouchableOpacity>
         )}
       </View>
