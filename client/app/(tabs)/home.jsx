@@ -47,25 +47,28 @@ const Home = () => {
           <Text style={{ fontSize: 50, textAlign: 'center', padding: 20 }}>Books</Text>
         </View>
         
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
+        <View style={{  flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center'  }}>
           {books.map((book, index) => (
             <BookIcon key={index} title={book.title} onPressed={() => showBook(book.title, book.description, book.id, fetchBooks)} />
           ))}
-          <TouchableOpacity 
+          
+        </View>
+        
+      </ScrollView><TouchableOpacity 
     style={{ 
+      bottom: 20,
+      marginRight: 'auto',
+      marginLeft: 'auto',
       padding: 20, 
       backgroundColor: '#312509', 
       alignItems: 'center',
       justifyContent: 'center', 
-      width: 80, 
-      height: 80,
-      borderRadius: 10,
+      width: 100, 
+      height: 40,
+      borderRadius: 20,
     }}>
     <Ionicons name="add-outline" color="white" size={25} />
   </TouchableOpacity>
-        </View>
-        
-      </ScrollView>
     </SafeAreaView>
   );
 };
