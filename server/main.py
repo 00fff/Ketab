@@ -5,6 +5,7 @@ from supabase import create_client
 from flask_cors import CORS, cross_origin
 from werkzeug.utils import secure_filename
 import base64
+import uuid
 from PIL import Image
 import io
 import os
@@ -192,13 +193,14 @@ def addPage():
             base64_data = image_data.split(',')[1] 
             # Decode the base64 data into bytes
             image_bytes = base64.b64decode(base64_data)
+            file_name = str(uuid.uuid4())
             # Optionally, you could open the image with PIL to verify its validity
             # image = Image.open(io.BytesIO(image_bytes))
             # Ensure the image is valid (uncomment if needed)
             # image.verify()
             # Define the file path where the image will be stored
             user_id = session.get("user_id")
-            file_path = f'{user_id}/{id}/uploaded_image.png'
+            file_path = f'{user_id}/{id}/{file_name}.png'
             
             # Perform text extraction from the image
             text = translate(image_bytes)

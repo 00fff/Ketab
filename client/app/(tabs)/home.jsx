@@ -42,19 +42,29 @@ const Home = () => {
   return (
     <SafeAreaView style={{ backgroundColor: '#357266', flex: 1 }}>
       <ScrollView>
+        
         <View>
           <Text style={{ fontSize: 50, textAlign: 'center', padding: 20 }}>Books</Text>
         </View>
+        
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
           {books.map((book, index) => (
             <BookIcon key={index} title={book.title} onPressed={() => showBook(book.title, book.description, book.id)} />
           ))}
+          <TouchableOpacity 
+    style={{ 
+      padding: 20, 
+      backgroundColor: '#312509', 
+      alignItems: 'center',
+      justifyContent: 'center', 
+      width: 80, 
+      height: 80,
+      borderRadius: 10,
+    }}>
+    <Ionicons name="add-outline" color="white" size={25} />
+  </TouchableOpacity>
         </View>
-        <TouchableOpacity>
-          <View style={{ backgroundColor: '#312509', width: 80, height: 80, borderRadius: 15, justifyContent: 'center', alignItems: 'center', padding: 20 }}>
-            <Ionicons name="add-outline" color={"white"} size={25} />
-          </View>
-        </TouchableOpacity>
+        
       </ScrollView>
     </SafeAreaView>
   );
