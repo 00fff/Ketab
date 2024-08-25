@@ -213,6 +213,7 @@ def addPage():
             .insert({"book_id": id, "img": res, "translated_img": text})
             .execute()
             )
+            return jsonify({'message': 'yippie'}), 200
         else:
             return jsonify({'message': 'No image data provided'}), 400
     
@@ -251,7 +252,6 @@ def translate(img):
     translated_filename = f"{filename}_translated.txt"
     # Define the file path where the text will be stored
     file_path = f'{user_id}/{translated_filename}'
-    print(full_text)
     # # Convert the extracted text to bytes
     # text_bytes = full_text.encode('utf-8')
     # # Upload the text bytes to Supabase storage

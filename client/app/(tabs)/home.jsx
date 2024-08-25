@@ -49,7 +49,7 @@ const Home = () => {
         
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
           {books.map((book, index) => (
-            <BookIcon key={index} title={book.title} onPressed={() => showBook(book.title, book.description, book.id)} />
+            <BookIcon key={index} title={book.title} onPressed={() => showBook(book.title, book.description, book.id, fetchBooks)} />
           ))}
           <TouchableOpacity 
     style={{ 

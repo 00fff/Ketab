@@ -3,7 +3,7 @@ import { SafeAreaView, View, Text, Button, Image, StyleSheet, Touchable, Touchab
 import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios'; // Import axios for making HTTP requests
 
-const PageForm = ({ width, height, left, right, color, bottom, id}) => {
+const PageForm = ({ width, height, left, right, color, bottom, id, updatePages}) => {
   const [image, setImage] = useState(null);
   const CreateNewPage = async ( image, id) => {
     try {
@@ -16,6 +16,7 @@ const PageForm = ({ width, height, left, right, color, bottom, id}) => {
         },
         withCredentials: true, // Include credentials in the request
       });
+      updatePages();
     } catch (error) {
       console.error(error); // Log any errors that occur during the request
     }

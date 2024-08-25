@@ -4,7 +4,7 @@ import { ScrollView, SafeAreaView, View, Image, TouchableOpacity, Text} from 're
 import { Ionicons } from 'react-native-vector-icons';
 import EditWords from '../components/EditWords'
 
-const Page = ({ book_id, createPage }) => {
+const Page = ({ book_id, createPage, updatePages, setUpdatePages}) => {
   const [pageCount, setPageCount] = useState(0); // State to track the total number of pages
   const [translate, setTranslate] = useState(false); // State to toggle translation mode
   const [pages, setPages] = useState([]); // State to store page data
@@ -30,6 +30,16 @@ const Page = ({ book_id, createPage }) => {
       console.error(error); // Log any errors that occur during the API request
     }
   };
+  useEffect(() => {
+    if (updatePages === true) {
+      fetchBooks();
+      setUpdatePages();
+      createPage()
+    }
+
+  }, [updatePages]); // Dependency array includes updatePages
+
+  
   const changeEditState = () => {
     seteditWords(!editWords)
   }
