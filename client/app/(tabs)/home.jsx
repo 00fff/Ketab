@@ -3,10 +3,12 @@ import { ScrollView, View, Text, SafeAreaView, TouchableOpacity } from 'react-na
 import { Ionicons } from 'react-native-vector-icons';
 import axios from 'axios';
 import BookIcon from "../../components/BookIcon";
+import CreateBook from "../../components/CreateBook";
 import { useNavigation } from '@react-navigation/native'; // Import the useNavigation hook
 
 const Home = () => {
   const [books, setBooks] = useState([]);
+  const [toggleCreate, settoggleCreate] = useState(false)
   const navigation = useNavigation(); // Get the navigation object
 
   const fetchBooks = async () => {
@@ -34,7 +36,12 @@ const Home = () => {
     });
   };
   
-
+  const toggleCreateBook = () => {
+    console.log(1);
+    console.log(toggleCreate);
+    settoggleCreate(!toggleCreate);
+    console.log(toggleCreate);
+  };
   useEffect(() => {
     fetchBooks();
   }, []);
@@ -42,12 +49,13 @@ const Home = () => {
   return (
     <SafeAreaView style={{ backgroundColor: '#357266', flex: 1 }}>
       <ScrollView>
-        
+        {toggleCreate && (<CreateBook width={300} height={500} color={'#001427'} toggleCreateBook={toggleCreateBook} fetchBooks={fetchBooks}/>)}
         <View>
           <Text style={{ fontSize: 50, textAlign: 'center', padding: 20 }}>Books</Text>
         </View>
         
         <View style={{  flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center'  }}>
+          
           {books.map((book, index) => (
             <BookIcon key={index} title={book.title} onPressed={() => showBook(book.title, book.description, book.id, fetchBooks)} />
           ))}
@@ -55,6 +63,7 @@ const Home = () => {
         </View>
         
       </ScrollView><TouchableOpacity 
+    onPress={toggleCreateBook}
     style={{ 
       bottom: 20,
       marginRight: 'auto',
