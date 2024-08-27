@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { ScrollView, SafeAreaView, View, Text, TouchableOpacity } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import axios from 'axios'; // Import axios for making HTTP requests
-import { useRoute } from '@react-navigation/native'; // Import useRoute for accessing route parameters
 import Page from '../components/Page'; // Import Page component
 import PageForm from '../components/PageForm'; // Import PageForm component
 import SettingsForm from '../components/SettingsForm'; // Import SettingsForm component
 import { Ionicons } from 'react-native-vector-icons'; // Import Ionicons for icons
 
-const Book = ({ fetchBooks }) => {
-  const route = useRoute(); // Get the route object to access route parameters
+const Book = () => {
+  const navigation = useNavigation();
+  const route = useRoute();
 
   const { param1, param2, param3 } = route.params; // Destructure the parameters from the route
   const [showForm, setShowForm] = useState(false); // State to toggle the visibility of PageForm
@@ -23,7 +24,7 @@ const Book = ({ fetchBooks }) => {
     settoggleSettings(!toggleSettings)
   }
   const DeleteBook = async () => {
-    console.log("Hello" + param3)
+    
     try {
       const response = await axios.post("http://127.0.0.1:8080/deleteBook", {
         id: param3,
@@ -34,7 +35,8 @@ const Book = ({ fetchBooks }) => {
         withCredentials: true, // Include credentials in the request
         
       });
-      fetchBooks();
+      navigation.goBack()
+      
     } catch (error) {
       console.error(error); // Log any errors that occur during the request
     }

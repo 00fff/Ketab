@@ -38,7 +38,6 @@ const Home = () => {
   };
   
   const toggleCreateBook = () => {
-    console.log(1);
     console.log(toggleCreate);
     settoggleCreate(!toggleCreate);
     console.log(toggleCreate);
@@ -50,7 +49,7 @@ const Home = () => {
   return (
     <SafeAreaView style={{ backgroundColor: '#357266', flex: 1 }}>
       <ScrollView>
-        {toggleCreate && (<CreateBook width={300} height={500} color={'#001427'} toggleCreateBook={toggleCreateBook} fetchBooks={fetchBooks} id={books.id}/>)}
+        {toggleCreate && (<CreateBook width={300} height={500} color={'#001427'} toggleCreateBook={toggleCreateBook} fetchBooks id={books.id}/>)}
         <View>
           <Text style={{ fontSize: 50, textAlign: 'center', padding: 20 }}>Books</Text>
         </View>
