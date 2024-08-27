@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center', 
     position: 'absolute',
-    top: '150%', 
+    top: '100%', 
     left: '50%', 
     transform: [{ translateX: -150 }, { translateY: -250 }], 
     zIndex: 1,
