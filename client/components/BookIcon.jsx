@@ -10,7 +10,10 @@ const BookIcon = ({ title, onPressed, cover }) => {
     <TouchableOpacity onPress={onPressed} style={styles.button}>
       <View style={styles.iconContainer}>
         <Image style={styles.coverImage} source={cover} />
-        <Text style={styles.title}>{title}</Text>
+        <View style={{width: 90, height: 25, backgroundColor: '#312509', bottom: 0, position: 'absolute', borderBottomLeftRadius: 9, borderBottomRightRadius: 9}}>
+          <Text style={styles.title}>{title}</Text>
+        </View>
+        
       </View>
     </TouchableOpacity>
   );
@@ -36,12 +39,14 @@ const styles = StyleSheet.create({
     elevation: 5, // Shadow for Android
   },
   coverImage: {
-    height: 50, // Slightly larger for emphasis
-    width: 50,  // Proportional width
-    marginBottom: 8, // More space between image and text
+    height: 90, // Slightly larger for emphasis
+    width: 90,  // Proportional width
+    // marginBottom: 8, // More space between image and text
     borderRadius: 10, // Rounded corners for the image
+    position: 'absolute',
   },
   title: {
+
     color: '#F5F5F7', // Light gray for modern contrast
     fontSize: 16, // Modern font size
     fontWeight: '600', // Medium font weight for readability
