@@ -254,7 +254,7 @@ def friendSearch():
         query = request.args.get('query')
         response = (
                 supabase.table("profile")
-                .select("display_name")
+                .select("display_name", "id")
                 .eq("display_name", query)
                 .execute()
             )
@@ -263,6 +263,23 @@ def friendSearch():
             return jsonify({'results': response.data}), 200
         else: 
             return jsonify({'message': 'response.data not found'}), 400
+@app.route("/addFriend", methods=['POST'])
+@cross_origin(supports_credentials=True)
+def addFriend():
+    if request.method == 'POST':
+        friend_id = "5ecdb644-8142-4df1-9e8a-cbc637f84f3f"
+        if session.get("user_id"):
+            user_id = session.get("user_id")
+        else: 
+            return jsonify({'message': 'User Not In Session'}), 400
+        response = (
+                supabase.table("friends")
+                .insert({"friend1": user_id, "friend2": friend_id})
+                .execute()
+            )
+        return jsonify({'results': response.data}), 200
+    else: 
+        return jsonify({'message': 'response.data not found'}), 400
 
 @app.route('/deleteBook', methods=['POST', 'GET'])
 @cross_origin(supports_credentials=True)
