@@ -34,6 +34,15 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
+        name="friends"
+        options={{
+          tabBarLabel: 'Community',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="people-circle-outline" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="settings"
         options={{
           tabBarLabel: 'Profile',
@@ -43,5 +52,6 @@ export default function TabsLayout() {
         }}
       />
     </Tabs>
+    
   );
 }

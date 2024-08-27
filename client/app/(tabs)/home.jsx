@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Text, SafeAreaView, TouchableOpacity } from 'react-native';
+import { ScrollView, View, Text, SafeAreaView, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from 'react-native-vector-icons';
 import axios from 'axios';
 import BookIcon from "../../components/BookIcon";
@@ -51,7 +51,7 @@ const Home = () => {
       <ScrollView>
         {toggleCreate && (<CreateBook width={300} height={500} color={'#001427'} toggleCreateBook={toggleCreateBook} fetchBooks id={books.id}/>)}
         <View>
-          <Text style={{ fontSize: 50, textAlign: 'center', padding: 20 }}>Books</Text>
+          <Text style={styles.title}>Books</Text>
         </View>
         
         <View style={{  flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center'  }}>
@@ -62,7 +62,8 @@ const Home = () => {
           
         </View>
         
-      </ScrollView><TouchableOpacity 
+      </ScrollView>
+      <TouchableOpacity 
     onPress={toggleCreateBook}
     style={{ 
       bottom: 20,
@@ -80,6 +81,25 @@ const Home = () => {
   </TouchableOpacity>
     </SafeAreaView>
   );
+  
 };
+const styles = StyleSheet.create({
+  title: {
+    fontSize: 50,
+    textAlign: 'center',
+    padding: 20,
+    backgroundColor: '#a3bbad',
+    marginHorizontal: 'auto',
+    marginTop: 20,
+    height: 100,
+    width: 200,
+    borderRadius: 10,
+    elevation: 10,
+    shadowColor: 'black',
+    shadowOffset: { width: 0.1, height: 0.1 },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
+  },
+})
 
 export default Home;
