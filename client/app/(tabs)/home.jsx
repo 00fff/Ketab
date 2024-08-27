@@ -27,12 +27,13 @@ const Home = () => {
     }
   };
 
-  const showBook = (title, description, id) => {
+  const showBook = (title, description, id, cover) => {
     console.log(`Navigating to Book with ID: ${id}`);
     navigation.navigate('Book', {
       param1: title,
       param2: description,
       param3: id,
+      param4: cover,
     });
   };
   
@@ -57,7 +58,7 @@ const Home = () => {
         <View style={{  flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center'  }}>
           
           {books.map((book, index) => (
-            <BookIcon key={index} title={book.title} onPressed={() => showBook(book.title, book.description, book.id, fetchBooks)} />
+            <BookIcon key={index} title={book.title} cover={book.cover} onPressed={() => showBook(book.title, book.description, book.id, fetchBooks)} />
           ))}
           
         </View>
