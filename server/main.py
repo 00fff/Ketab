@@ -157,12 +157,36 @@ def createBook():
     if request.method == 'POST':
         title = request.form.get('title')
         description = request.form.get('description')
-        id = session['user_id']
+        if request.form.get('img'):
+            img = request.form.get('img')
+        book_id = request.form.get('id')
+        user_id = session["user_id"]
+        base64_data = img.split(',')[1]
+        image_bytes = base64.b64decode(base64_data)
+        
         response = (
             supabase.table("books")
-            .insert({"title": title, 'description':description, 'user_id': id})
+            .insert({"title": title, 'description':description, 'user_id': user_id})
             .execute()
         )
+        book = (
+            supabase.table("books")
+            .select("id")
+            .eq("title", title)
+            .execute()
+        )
+        book_id = book.data[0]['id']
+        print(book_id)
+        file_path = f'{user_id}/{book_id}/cover.png'
+        response = supabase.storage.from_('Pages').upload(file_path, image_bytes)
+        res = supabase.storage.from_('Pages').get_public_url(file_path)
+        response = (
+            supabase.table("books")
+            .insert({"cover": res})
+            .execute()
+        )
+        
+        
 
         return jsonify({'title': title, 'description': description})
     

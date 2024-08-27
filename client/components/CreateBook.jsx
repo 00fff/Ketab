@@ -1,14 +1,19 @@
 import React, { useState }from 'react';
 import axios from 'axios';
-import { SafeAreaView, View, Text, TouchableOpacity, StyleSheet, TextInput } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import { SafeAreaView, View, Text, TouchableOpacity, StyleSheet, TextInput, Button, Image } from 'react-native';
 
 const CreateBook = ({ width, height, color, onPressFunction, fetchBooks,  toggleCreateBook}) => {
-  const CreateBooklink = async (name, description) => {
+  const [image, setImage] = useState(null)
+  const [BookName, setBookName] = useState('')
+  const [BookDescription, setDescription] = useState('')
+  const CreateBooklink = async (name, description, img_url) => {
     try {
       const response = await axios.post("http://127.0.0.1:8080/createBook", 
         {
           title: BookName,
           description: BookDescription,
+          img: image,
         },
         {
           headers: {
@@ -26,8 +31,28 @@ const CreateBook = ({ width, height, color, onPressFunction, fetchBooks,  toggle
       console.error('There was an error!', error);
     }
   };
-  const [BookName, setBookName] = useState('')
-  const [BookDescription, setDescription] = useState('')
+  const pickImage = async () => {
+    // Request permissions if needed
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Sorry, we need camera roll permissions to make this work!');
+      return;
+    }
+
+    // Launch image picker
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+      console.log(image)
+    }
+  };
+  
   return (
     <SafeAreaView style={[styles.container, { width, height, backgroundColor: color }]}>
       <View style={styles.innerContainer}>
@@ -53,6 +78,12 @@ const CreateBook = ({ width, height, color, onPressFunction, fetchBooks,  toggle
           keyboardType="default"
         />
 
+        
+        <Text style={styles.label}>Choose An Image For Your New Page:</Text>
+        <Button title="Choose Image" onPress={pickImage} />
+        {image && (
+          <Image source={{ uri: image }} style={{width: 200, height: 100, margin: 10}} />
+        )}
         <TouchableOpacity 
           onPress={() => {CreateBooklink(BookName, BookDescription)}}
           style={styles.button}
