@@ -243,6 +243,26 @@ def addPage():
             return jsonify({'message': 'No image data provided'}), 400
     
     return jsonify({'message': 'Invalid request method'}), 400
+@app.route("/friendSearch", methods=['GET'])
+@cross_origin(supports_credentials=True)
+def friendSearch():
+    if request.method == 'GET':
+        if session.get("user_id"):
+            user_id = session.get("user_id")
+        else: 
+            return jsonify({'message': 'User Not In Session'}), 400
+        query = request.args.get('query')
+        response = (
+                supabase.table("profile")
+                .select("display_name")
+                .eq("display_name", query)
+                .execute()
+            )
+
+        if response.data:
+            return jsonify({'results': response.data}), 200
+        else: 
+            return jsonify({'message': 'response.data not found'}), 400
 
 @app.route('/deleteBook', methods=['POST', 'GET'])
 @cross_origin(supports_credentials=True)
