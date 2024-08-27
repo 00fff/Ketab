@@ -181,10 +181,11 @@ def createBook():
         response = supabase.storage.from_('Pages').upload(file_path, image_bytes)
         res = supabase.storage.from_('Pages').get_public_url(file_path)
         response = (
-            supabase.table("books")
-            .insert({"cover": res})
-            .execute()
-        )
+                supabase.table("books")
+                .update({"cover": res})
+                .eq("title", title)
+                .execute()
+            )
         
         
 

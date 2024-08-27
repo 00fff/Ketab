@@ -54,7 +54,7 @@ const CreateBook = ({ width, height, color, onPressFunction, fetchBooks,  toggle
   };
   
   return (
-    <SafeAreaView style={[styles.container, { width, height, backgroundColor: color }]}>
+    <SafeAreaView style={[styles.container, { width, height, backgroundColor: color, position: 'absolute' }]}>
       <View style={styles.innerContainer}>
         <Text style={{fontSize: 30, color: "white"}}>Create Book:</Text>
         <Text style={styles.label}>Name:</Text>
@@ -109,6 +109,7 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     alignItems: 'center',
+    position: 'absolute',
   },
   input: {
     borderWidth: 1,
