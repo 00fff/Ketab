@@ -128,7 +128,7 @@ def signIn():
 
         
 
-@app.route("/logOut", methods= ["POST", "GET"])
+@app.route("/logOut", methods= ["POST"])
 @cross_origin(supports_credentials=True)
 def logOut():
     if request.method =='POST':
@@ -137,7 +137,7 @@ def logOut():
         return jsonify({'message': 'Succefully Logged Out'}), 200
     return jsonify({'message': 'Invalid request method'}), 400
 
-@app.route("/current_user", methods=['POST', 'GET'])
+@app.route("/current_user", methods=['GET'])
 @cross_origin(supports_credentials=True)
 def current_user():
     if request.method =='GET':
@@ -281,7 +281,7 @@ def addFriend():
     else: 
         return jsonify({'message': 'response.data not found'}), 400
 
-@app.route('/deleteBook', methods=['POST', 'GET'])
+@app.route('/deleteBook', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def deleteBook():
     if request.method == 'POST':
@@ -320,7 +320,7 @@ def translate(img):
     # response = supabase.storage.from_('Pages').upload(file_path, text_bytes)
     return full_text
 
-@app.route('/listBooks', methods=['GET', 'POST'])
+@app.route('/listBooks', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def listBooks():
     if request.method =='GET':
@@ -329,7 +329,7 @@ def listBooks():
         # response = supabase.table("page").select("img, translated_img").eq("book_id", book_id).execute()
     return jsonify({'response': response.data}), 200
 
-@app.route('/listPages', methods=['POST', 'GET'])
+@app.route('/listPages', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def listPages():
     if request.method == 'GET':
