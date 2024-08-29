@@ -4,7 +4,9 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const Friends = () => {
   const [friendSearch, setFriendSearch] = useState('');
-
+  const SearchFriends = () => {
+    console.log("Hello World")
+  }
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -20,6 +22,7 @@ const Friends = () => {
               placeholderTextColor="#888"
               selectionColor="#FFF" // Color of the cursor when the TextInput is focused
               underlineColorAndroid="transparent" // Removes the underline on Android
+              
             />
           </View>
         </View>
