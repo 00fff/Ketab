@@ -249,6 +249,8 @@ def addPage():
 def friendList():
     if request.method == 'GET':
         user_id = session.get("user_id")
+        if not user_id:
+            return jsonify({'message': 'User Not In Session'}), 400
         # friends you accepted
         ascfriends = (
         supabase.table("friends")
@@ -263,7 +265,37 @@ def friendList():
         .eq("friend1", user_id)
         .execute()
             )
-        return jsonify({'friend request I sent': intfriends.data, 'friend request I accepted': ascfriends.data}), 200
+        # friend "list"
+        friend_list = []
+        print("friend request I sent " + str(intfriends.data))
+        print('friend request I accepted ' + str(ascfriends.data))
+        # For Loops for appending friend ID's for both "int" and "asc" Friends
+        for i in range(len(intfriends.data)):
+            friend2_id = intfriends.data[i]["friend2"]
+            friend_list.append(friend2_id)
+        for i in range(len(ascfriends.data)):
+            friend1_id = ascfriends.data[i]["friend1"]
+            friend_list.append(friend1_id)
+
+        print("My friends: " + str(friend_list))
+
+        friend_names = []
+        # search friend profiles
+        for id in friend_list:
+            search_fprofiles = (
+            supabase.table("profile")
+            .select("display_name", "pfp")
+            .eq("id", id)
+            .execute()
+                )
+            data = search_fprofiles.data[0]
+            print(str(data))
+            friend_names.append(data)
+        friends = {
+
+        }
+        # 'friend request I sent': intfriends.data, 'friend request I accepted': ascfriends.data, 
+        return jsonify({"friends": friend_names}), 200
     return jsonify({'message': 'Invalid request method'}), 400
 
 
