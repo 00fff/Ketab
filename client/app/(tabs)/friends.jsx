@@ -22,7 +22,7 @@ const Friends = () => {
               placeholderTextColor="#888"
               selectionColor="#FFF" // Color of the cursor when the TextInput is focused
               underlineColorAndroid="transparent" // Removes the underline on Android
-              
+              onSubmitEditing={SearchFriends} // Handles Enter key press
             />
           </View>
         </View>
