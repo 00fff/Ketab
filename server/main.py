@@ -243,6 +243,33 @@ def addPage():
             return jsonify({'message': 'No image data provided'}), 400
     
     return jsonify({'message': 'Invalid request method'}), 400
+
+@app.route("/friendList", methods=['GET'])
+@cross_origin(supports_credentials=True)
+def friendList():
+    if request.method == 'GET':
+        user_id = session.get("user_id")
+        # friends you accepted
+        ascfriends = (
+        supabase.table("friends")
+        .select("friend1")
+        .eq("friend2", user_id)
+        .execute()
+            )
+        # friends you sent
+        intfriends = (
+        supabase.table("friends")
+        .select("friend2")
+        .eq("friend1", user_id)
+        .execute()
+            )
+        return jsonify({'friend request I sent': intfriends.data, 'friend request I accepted': ascfriends.data}), 200
+    return jsonify({'message': 'Invalid request method'}), 400
+
+
+
+
+
 @app.route("/friendSearch", methods=['GET'])
 @cross_origin(supports_credentials=True)
 def friendSearch():
