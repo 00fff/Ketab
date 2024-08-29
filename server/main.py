@@ -311,6 +311,7 @@ def friendSearch():
         else: 
             return jsonify({'message': 'User Not In Session'}), 400
         query = request.args.get('query')
+        print(query)
         response = (
                 supabase.table("profile")
                 .select("display_name", "id")

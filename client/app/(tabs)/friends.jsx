@@ -1,12 +1,30 @@
 import React, { useState } from 'react';
 import { ScrollView, SafeAreaView, View, Text, StyleSheet, TextInput } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import axios from 'axios';
 
 const Friends = () => {
   const [friendSearch, setFriendSearch] = useState('');
-  const SearchFriends = () => {
-    console.log("Hello World")
-  }
+  const [friendlist, setFriendList] = useState("")
+  const SearchFriends = async (word) => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8080/friendSearch", {
+        params: {
+          query: word, // Pass the query parameter in the params object
+        },
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        withCredentials: true // Include credentials if needed
+      });
+      const data = response.data;
+      console.log('API Response:', data);
+      setFriendList(data); // Adjust based on the actual data structure
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -22,7 +40,7 @@ const Friends = () => {
               placeholderTextColor="#888"
               selectionColor="#FFF" // Color of the cursor when the TextInput is focused
               underlineColorAndroid="transparent" // Removes the underline on Android
-              onSubmitEditing={SearchFriends} // Handles Enter key press
+              onSubmitEditing={() => SearchFriends(friendSearch)} // Handles Enter key press
             />
           </View>
         </View>
