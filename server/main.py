@@ -121,7 +121,7 @@ def signIn():
     except AuthApiError as e:
             # Handle specific authentication errors
             if "Email not confirmed" in str(e):
-                return jsonify({'message': 'Email not confirmed. Please check your email to confirm your account.'}), 400
+                return jsonify({'message': 'Email Sent to your displayed Email. Please check your email to confirm your account.'}), 400
             else:
                 return jsonify({'message': f'Authentication failed: {str(e)}'}), 400
 
