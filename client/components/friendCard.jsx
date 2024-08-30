@@ -5,7 +5,7 @@ const FriendCard = ({ username, pfp }) => {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
-        <Image style={styles.profileImage} source={pfp} />
+        <Image style={styles.profileImage} source={pfp ? pfp   : "https://tr.rbxcdn.com/fcb4582468ed3c72d2d99527a6519667/420/420/Hat/Webp"} />
         <Text style={styles.username}>{username}</Text>
       </View>
     </View>

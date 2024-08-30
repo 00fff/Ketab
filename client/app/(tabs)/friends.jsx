@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ScrollView, SafeAreaView, View, Text, StyleSheet, TextInput } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
@@ -7,6 +7,23 @@ import FriendCard from "../../components/friendCard";
 const Friends = () => {
   const [friendSearch, setFriendSearch] = useState('');
   const [friendlist, setFriendList] = useState("")
+  const [currentFriendList, setcurrentFriendList] = useState([])
+  const FriendsList = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8080/friendList", {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        withCredentials: true
+      });
+      const data = response.data.friends;
+      setcurrentFriendList(data)
+      console.log(currentFriendList)
+      console.log(data)
+    } catch (error) {
+      console.error(error);
+    }
+  }
   const SearchFriends = async (word) => {
     try {
       const response = await axios.get("http://127.0.0.1:8080/friendSearch", {
@@ -21,16 +38,19 @@ const Friends = () => {
       const data = response.data;
       console.log('API Response:', data);
       setFriendList(data); // Adjust based on the actual data structure
+      console.log(friendlist)
     } catch (error) {
       console.error(error);
     }
   };
-  
+  useEffect(() => {
+    FriendsList();
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.innerContainer}>
-          <Text style={styles.title}>Friends</Text>
+          <Text style={styles.title}>Search</Text>
           <View style={styles.searchBar}>
             <Ionicons name="search-outline" size={20} color="#888" style={styles.searchIcon} />
             <TextInput
@@ -47,9 +67,11 @@ const Friends = () => {
           <View>
             <Text><Text style={styles.friend_title}>Friends List</Text></Text>
           </View>
-          <View style={{ width: '100%', height: "66%", top: 55, backgroundColor: 'red', overflow: 'scroll'}}>
-          <FriendCard username={"Harith"} pfp={"https://wtiihbdbquxwefbrojtg.supabase.co/storage/v1/object/public/Profile_Pictures/image0.png?t=2024-08-12T22%3A28%3A18.788Z"}/>
-          <FriendCard username={"hello"} pfp={"https://tr.rbxcdn.com/fcb4582468ed3c72d2d99527a6519667/420/420/Hat/Webp"}/>
+          <View style={{ width: '100%', height: "66%", top: 55, overflow: 'scroll'}}>
+            {currentFriendList.map((Friend, index) => (
+              <FriendCard key={index }username={Friend.display_name} pfp={Friend.pfp}/>
+            ))}
+          
           
           </View>
         </View>
