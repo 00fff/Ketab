@@ -5,8 +5,8 @@ import axios from 'axios';
 import FriendCard from "../../components/friendCard";
 
 const Friends = () => {
-  const [friendSearch, setFriendSearch] = useState('');
-  const [friendlist, setFriendList] = useState("")
+  const [friendSearch, setFriendSearch] = useState("");
+  const [friendlist, setFriendList] = useState([])
   const [currentFriendList, setcurrentFriendList] = useState([])
   const FriendsList = async () => {
     try {
@@ -35,7 +35,7 @@ const Friends = () => {
         },
         withCredentials: true // Include credentials if needed
       });
-      const data = response.data;
+      const data = response.data.results;
       console.log('API Response:', data);
       setFriendList(data); // Adjust based on the actual data structure
       console.log(friendlist)
@@ -66,6 +66,9 @@ const Friends = () => {
           </View>
           <View>
             <Text><Text style={styles.friend_title}>Friends List</Text></Text>
+            {friendlist.map((results, index) => (
+                <FriendCard key={index} username={results.display_name} pfp={''}/>
+            ))}
           </View>
           <View style={{ width: '100%', height: "66%", top: 55, overflow: 'scroll'}}>
             {currentFriendList.map((Friend, index) => (
