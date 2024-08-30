@@ -52,6 +52,7 @@ const Friends = () => {
         <View style={styles.innerContainer}>
           <Text style={styles.title}>Search</Text>
           <View style={styles.searchBar}>
+           
             <Ionicons name="search-outline" size={20} color="#888" style={styles.searchIcon} />
             <TextInput
               style={styles.input}
@@ -64,11 +65,14 @@ const Friends = () => {
               onSubmitEditing={() => SearchFriends(friendSearch)} // Handles Enter key press
             />
           </View>
+          <View style={{overflow:"scroll"}}>
+            {friendlist.map((results, index) => (
+                <FriendCard key={index} username={results.display_name} pfp={results.pfp}/>
+            ))}
+            </View>
           <View>
             <Text><Text style={styles.friend_title}>Friends List</Text></Text>
-            {friendlist.map((results, index) => (
-                <FriendCard key={index} username={results.display_name} pfp={''}/>
-            ))}
+           
           </View>
           <View style={{ width: '100%', height: "66%", top: 55, overflow: 'scroll'}}>
             {currentFriendList.map((Friend, index) => (

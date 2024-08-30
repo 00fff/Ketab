@@ -314,7 +314,7 @@ def friendSearch():
         print(query)
         response = (
                 supabase.table("profile")
-                .select("display_name", "id")
+                .select("display_name", "id", "pfp")
                 .eq("display_name", query)
                 .execute()
             )
