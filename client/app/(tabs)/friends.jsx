@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ScrollView, SafeAreaView, View, Text, StyleSheet, TextInput } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
+import FriendCard from "../../components/friendCard";
 
 const Friends = () => {
   const [friendSearch, setFriendSearch] = useState('');
@@ -43,6 +44,14 @@ const Friends = () => {
               onSubmitEditing={() => SearchFriends(friendSearch)} // Handles Enter key press
             />
           </View>
+          <View>
+            <Text><Text style={styles.friend_title}>Friends List</Text></Text>
+          </View>
+          <View style={{ width: '100%', height: "66%", top: 55, backgroundColor: 'red', overflow: 'scroll'}}>
+          <FriendCard username={"Harith"} pfp={"https://wtiihbdbquxwefbrojtg.supabase.co/storage/v1/object/public/Profile_Pictures/image0.png?t=2024-08-12T22%3A28%3A18.788Z"}/>
+          <FriendCard username={"hello"} pfp={"https://tr.rbxcdn.com/fcb4582468ed3c72d2d99527a6519667/420/420/Hat/Webp"}/>
+          
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -62,6 +71,19 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'center',
     paddingTop: 20,
+  },
+  friend_title : {
+    fontSize: 25,
+    textAlign: 'center',
+    padding: 20,
+    top: 20,
+    backgroundColor: '#a3bbad',
+    borderRadius: 10,
+    elevation: 10,
+    shadowColor: 'black',
+    shadowOffset: { width: 0.1, height: 0.1 },
+    shadowOpacity: 0.5,
+    shadowRadius: 10,
   },
   title: {
     fontSize: 25,
