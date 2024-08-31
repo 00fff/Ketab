@@ -90,7 +90,7 @@ def signUp():
             return jsonify({'message': f'Error during sign up: {str(e)}'}), 400
     return jsonify({'message': 'Invalid request method'}), 400
 
-@app.route('/token', methods=['POST', 'GET'])
+@app.route('/token', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def token():
     if request.method == 'GET':
@@ -420,7 +420,6 @@ def deleteBook():
 @cross_origin(supports_credentials=True)
 def sendFreindRequest():
     if request.method == 'POST':
-        print("hi")
         if session.get("user_id"):
             user_id = session.get("user_id")
         else: 
