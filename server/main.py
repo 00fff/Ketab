@@ -359,6 +359,73 @@ def deleteBook():
         print(delete_response)
         return jsonify("Book Succefully Deleted"), 200
 
+@app.route("/sendFreindRequest", methods = ['POST'])
+@cross_origin(supports_credentials=True)
+def sendFreindRequest():
+    if request.method == 'POST':
+        if session.get("user_id"):
+            user_id = session.get("user_id")
+        else: 
+            return jsonify({'message': 'User Not In Session'}), 400
+        friend_id = request.form.get("friend_id")
+        response = (
+                supabase.table("friend_request")
+                .insert({"sender_id": user_id, "receiver_id": friend_id, "status": 'pending'})
+                .execute()
+            )
+        return jsonify("Friend Request Sent!"), 200
+    return jsonify("Unable To Send Friend Request "), 200
+
+@app.route("/listFriendRequests", methods=['GET'])
+@cross_origin(supports_credentials=True)
+def listFriendRequests():
+    if request.method == 'GET':
+        friend_requests = []
+        friends = []
+
+        # Check if user_id is in the session
+        if session.get("user_id"):
+            user_id = session.get("user_id")
+        else: 
+            return jsonify({'message': 'User Not In Session'}), 400
+
+        # Fetch friend requests
+        response = (
+            supabase.table("friend_request")
+            .select("sender_id") 
+            .eq("receiver_id", user_id)
+            .eq("status", "pending")
+            .execute()
+        )
+
+        # If friend requests exist, fetch the details of each friend
+        if response.data:
+            for req in response.data:
+                friend_requests.append(req["sender_id"])
+
+            for friend_id in friend_requests:
+                profile_response = (
+                    supabase.table("profile")
+                    .select("display_name", "pfp")
+                    .eq("id", friend_id)
+                    .execute()
+                )
+                if profile_response.data:
+                    friend_data = {
+                        "id": friend_id,
+                        "friend_data": profile_response.data[0],
+                    }
+                    friends.append(friend_data)  # Assuming data is returned as a list
+
+        return jsonify({
+            "message": "Friend Requests Listed!", 
+            "friend_requests": friend_requests, 
+            "friends": friends,
+        }), 200
+
+    return jsonify({"message": "Unable To List Friend Requests"}), 400
+
+
 def translate(img):
     user_id = session.get("user_id")
     # Initialize the Vision API client

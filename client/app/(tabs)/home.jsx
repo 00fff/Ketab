@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, SafeAreaView, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from 'react-native-vector-icons';
 import axios from 'axios';
+import { useRouter } from 'expo-router'; // Import useRouter hook for navigation
 import BookIcon from "../../components/BookIcon";
 import CreateBook from "../../components/CreateBook";
 import { useNavigation } from '@react-navigation/native'; // Import the useNavigation hook
@@ -10,6 +11,7 @@ const Home = () => {
   const [books, setBooks] = useState([]);
   const [toggleCreate, settoggleCreate] = useState(false)
   const navigation = useNavigation(); // Get the navigation object
+  const router = useRouter();
 
   const fetchBooks = async () => {
     try {
@@ -36,7 +38,9 @@ const Home = () => {
       param4: cover,
     });
   };
-  
+  const notification = () => {
+    router.push("/Notifications")
+  }
   const toggleCreateBook = () => {
     console.log(toggleCreate);
     settoggleCreate(!toggleCreate);
@@ -49,8 +53,13 @@ const Home = () => {
   return (
     <SafeAreaView style={{ backgroundColor: '#357266', flex: 1 }}>
       <ScrollView>
+        
+      
         {toggleCreate && (<CreateBook width={300} height={500} color={'#001427'} toggleCreateBook={toggleCreateBook} fetchBooks id={books.id}/>)}
         <View>
+          <TouchableOpacity onPress={notification} style={{position: 'absolute', right: 0, margin: 20, backgroundColor:'red'}}>
+          <Ionicons name="notifications-circle-outline" size={35}/>
+        </TouchableOpacity>
           <Text style={styles.title}>Books</Text>
         </View>
         

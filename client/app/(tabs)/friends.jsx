@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView, SafeAreaView, View, Text, StyleSheet, TextInput } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
+import { useRouter } from 'expo-router'; // Import useRouter hook for navigation
 import FriendCard from "../../components/friendCard";
+import RfreindCard from '../../components/RfreindCard'
 
 const Friends = () => {
   const [friendSearch, setFriendSearch] = useState("");
@@ -67,7 +69,7 @@ const Friends = () => {
           </View>
           <View style={{overflow:"scroll"}}>
             {friendlist.map((results, index) => (
-                <FriendCard key={index} username={results.display_name} pfp={results.pfp}/>
+                <RfreindCard key={index} username={results.display_name} pfp={results.pfp}/>
             ))}
             </View>
           <View>
