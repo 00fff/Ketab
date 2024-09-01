@@ -8,7 +8,12 @@ const FriendRequest = ({ username, pfp }) => {
         <Image style={styles.profileImage} source={pfp ? pfp   : "https://tr.rbxcdn.com/fcb4582468ed3c72d2d99527a6519667/420/420/Hat/Webp"} />
         <Text style={styles.username}>{username}</Text>
         <TouchableOpacity style={{right: 0, top: 25, flexDirection: 'row', backgroundColor: '#357266', height: 35, borderColor: 'black', borderWidth: 3, borderRadius: 10,}}>
-          <Ionicons name="paper-plane-outline" size={25} />
+          <Ionicons name="checkmark-circle-outline" size={25} />
+          
+        </TouchableOpacity>
+        <TouchableOpacity style={{right: 0, top: 25, flexDirection: 'row', backgroundColor: 'red', height: 35, borderColor: 'black', borderWidth: 3, borderRadius: 10, marginLeft: 10}}>
+          <Ionicons name="close-circle-outline" size={25} />
+          
         </TouchableOpacity>
         
       </View>

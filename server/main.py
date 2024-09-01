@@ -419,7 +419,6 @@ def listFriendRequests():
 
         return jsonify({
             "message": "Friend Requests Listed!", 
-            "friend_requests": friend_requests, 
             "friends": friends,
         }), 200
 
