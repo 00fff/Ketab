@@ -394,27 +394,7 @@ def addFriend():
     return jsonify({'message': 'Invalid request method'}), 405
 
     
-@app.route("/removeFriend", methods=['POST'])
-@cross_origin(supports_credentials=True)
-def removeFriend():
-    if request.method == 'POST':
-        friend_id = request.form.get('friend_id')
-        if session.get("user_id"):
-            user_id = session.get("user_id")
-        else: 
-            return jsonify({'message': 'User Not In Session'}), 400
 
-        remove_request = (
-            supabase.table("friend_request")
-            .update({"status": "denied"})
-            .eq("receiver_id", user_id)
-            .eq("sender_id", friend_id)
-            .execute()
-        )
-        
-        return jsonify({'results': "Denied Friend Request"}), 200
-    else: 
-        return jsonify({'message': 'response.data not found'}), 400
 @app.route('/deleteBook', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def deleteBook():
@@ -463,6 +443,57 @@ def denyRequest():
         return jsonify({"message": "Succefully Removed Friend Request"}), 200
     
     return jsonify({"message": "Unable To List Friend Requests"}), 400
+
+@app.route("/removeFriend", methods=['POST'])
+@cross_origin(supports_credentials=True)
+def removeFriend():
+    if request.method == "POST":
+        if session.get("user_id"):
+            user_id = session.get("user_id")
+        else: 
+            return jsonify({'message': 'User Not In Session'}), 400
+        
+        friend_name = request.form.get("friend_id")
+        
+        searchFriendName =  (
+                supabase.table("profile")
+                .select("id")
+                .eq("display_name", friend_name)
+                .execute()
+            )
+        print(searchFriendName)
+        print(searchFriendName.data[0]['id'])
+        friend_id = searchFriendName.data[0]['id']
+        # Check if the friendship exists
+        response1 = (
+            supabase.table("friends")
+            .select("*")
+            .eq("friend1", user_id)
+            .eq("friend2", friend_id)
+            .execute()
+        )
+        
+        response2 = (
+            supabase.table("friends")
+            .select("*")
+            .eq("friend2", user_id)
+            .eq("friend1", friend_id)
+            .execute()
+        )
+        
+        # If the friendship exists, remove it
+        if response1.data or response2.data:
+            if response1.data:
+                supabase.table('friends').delete().eq("friend1", user_id).eq("friend2", friend_id).execute()
+            elif response2.data:
+                supabase.table('friends').delete().eq("friend2", user_id).eq("friend1", friend_id).execute()
+            
+            return jsonify({"message": "Successfully Removed Friend"}), 200
+
+        return jsonify({"message": "Friendship does not exist"}), 400
+    
+    return jsonify({"message": "Invalid request method"}), 405
+
 @app.route("/listFriendRequests", methods=['GET'])
 @cross_origin(supports_credentials=True)
 def listFriendRequests():

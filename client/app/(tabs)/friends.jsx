@@ -59,6 +59,21 @@ const Friends = () => {
       console.error(error);
     }
   };
+  const removeFriend =  async ( friend_id ) => {
+    try {
+      const response = await axios.post("http://127.0.0.1:8080/removeFriend", {
+        friend_id: friend_id,
+      }, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        withCredentials: true
+      });
+      FriendsList();
+    } catch (error) {
+      console.error(error);
+    }
+  }
   useEffect(() => {
     FriendsList();
   }, []);
@@ -93,7 +108,7 @@ const Friends = () => {
           </View>
           <View style={{ width: '100%', height: "66%", top: 55, overflow: 'scroll'}}>
             {currentFriendList.map((Friend, index) => (
-              <FriendCard key={index} username={Friend.display_name} pfp={Friend.pfp}/>
+              <FriendCard key={index} username={Friend.display_name} pfp={Friend.pfp} removeFriend={() => removeFriend(Friend.display_name)}/>
             ))}
           
           
