@@ -323,24 +323,81 @@ def friendSearch():
             return jsonify({'results': response.data}), 200
         else: 
             return jsonify({'message': 'response.data not found'}), 400
+        
+
 @app.route("/addFriend", methods=['POST'])
 @cross_origin(supports_credentials=True)
 def addFriend():
     if request.method == 'POST':
-        friend_id = "5ecdb644-8142-4df1-9e8a-cbc637f84f3f"
+        friend_id = request.form.get('friend_id')
+
         if session.get("user_id"):
             user_id = session.get("user_id")
         else: 
             return jsonify({'message': 'User Not In Session'}), 400
-        response = (
+
+        # Check if friendship already exists in either direction
+        search_friends1 = (
+            supabase.table("friends")
+            .select("*")
+            .eq("friend1", user_id)
+            .eq("friend2", friend_id)
+            .execute()
+        )
+
+        search_friends2 = (
+            supabase.table("friends")
+            .select("*")
+            .eq("friend2", user_id)
+            .eq("friend1", friend_id)
+            .execute()
+        )
+
+        # If neither query returns results, insert the new friendship
+        if not search_friends1.data and not search_friends2.data:
+            response = (
                 supabase.table("friends")
                 .insert({"friend1": user_id, "friend2": friend_id})
                 .execute()
             )
-        return jsonify({'results': response.data}), 200
+
+            # Update friend request status to "complete"
+            remove_request = (
+                supabase.table("friend_request")
+                .update({"status": "complete"})
+                .eq("receiver_id", user_id)
+                .eq("sender_id", friend_id)
+                .execute()
+            )
+
+            return jsonify({'results': response.data}), 200
+        else:
+            return jsonify({'message': 'Friendship already exists'}), 400
+
+    return jsonify({'message': 'Invalid request method'}), 405
+
+    
+@app.route("/removeFriend", methods=['POST'])
+@cross_origin(supports_credentials=True)
+def removeFriend():
+    if request.method == 'POST':
+        friend_id = request.form.get('friend_id')
+        if session.get("user_id"):
+            user_id = session.get("user_id")
+        else: 
+            return jsonify({'message': 'User Not In Session'}), 400
+
+        remove_request = (
+            supabase.table("friend_request")
+            .update({"status": "denied"})
+            .eq("receiver_id", user_id)
+            .eq("sender_id", friend_id)
+            .execute()
+        )
+        
+        return jsonify({'results': "Denied Friend Request"}), 200
     else: 
         return jsonify({'message': 'response.data not found'}), 400
-
 @app.route('/deleteBook', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def deleteBook():
@@ -359,10 +416,11 @@ def deleteBook():
         print(delete_response)
         return jsonify("Book Succefully Deleted"), 200
 
-@app.route("/sendFreindRequest", methods = ['POST'])
+@app.route("/sendFriendRequest", methods = ['POST'])
 @cross_origin(supports_credentials=True)
 def sendFreindRequest():
     if request.method == 'POST':
+        print("hi")
         if session.get("user_id"):
             user_id = session.get("user_id")
         else: 

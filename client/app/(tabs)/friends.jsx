@@ -10,6 +10,20 @@ const Friends = () => {
   const [friendSearch, setFriendSearch] = useState("");
   const [friendlist, setFriendList] = useState([])
   const [currentFriendList, setcurrentFriendList] = useState([])
+  const sendFriendRequest = async ( friend_id ) => {
+    try {
+      const response = await axios.post("http://127.0.0.1:8080/sendFriendRequest", {
+        friend_id: friend_id,
+      }, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        withCredentials: true
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
   const FriendsList = async () => {
     try {
       const response = await axios.get("http://127.0.0.1:8080/friendList", {
@@ -69,7 +83,8 @@ const Friends = () => {
           </View>
           <View style={{overflow:"scroll"}}>
             {friendlist.map((results, index) => (
-                <RfreindCard key={index} username={results.display_name} pfp={results.pfp}/>
+              
+                <RfreindCard key={index} username={results.display_name} pfp={results.pfp} addfriend={() => sendFriendRequest(results.id)}/>
             ))}
             </View>
           <View>

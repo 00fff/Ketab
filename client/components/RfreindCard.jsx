@@ -1,13 +1,13 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-const RfreindCard = ({ username, pfp }) => {
+const RfreindCard = ({ username, pfp, addfriend}) => {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
         <Image style={styles.profileImage} source={pfp ? pfp   : "https://tr.rbxcdn.com/fcb4582468ed3c72d2d99527a6519667/420/420/Hat/Webp"} />
         <Text style={styles.username}>{username}</Text>
-        <TouchableOpacity style={{right: 0, top: 25, flexDirection: 'row', backgroundColor: '#357266', height: 35, borderColor: 'black', borderWidth: 3, borderRadius: 10,}}>
+        <TouchableOpacity onPress={addfriend} style={{right: 0, top: 25, flexDirection: 'row', backgroundColor: '#357266', height: 35, borderColor: 'black', borderWidth: 3, borderRadius: 10,}}>
           <Ionicons name="paper-plane-outline" size={25} />
         </TouchableOpacity>
         
