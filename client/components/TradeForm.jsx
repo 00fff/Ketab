@@ -10,6 +10,12 @@ const TradeForm = ({ width, height, left, right, color, bottom, onPress}) => {
           <Ionicons name="close-outline" size={25} />
         </TouchableOpacity>
         <Text style={styles.title}>Trade Books</Text>
+        <View style={styles.BookRow}>
+           <TouchableOpacity style={styles.books}></TouchableOpacity>
+        <TouchableOpacity style={styles.books}></TouchableOpacity>
+        </View>
+       
+        <TouchableOpacity style={styles.sendRequest}>Send Request</TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -25,6 +31,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
     borderRadius: 10,
     padding: 25,
+    borderColor: 'black',
+    borderWidth: 2,
+  },
+  BookRow: {
+    flexDirection: 'row',
+    
   },
   innerContainer: {
     flex: 1,
@@ -42,6 +54,23 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 20,
   },
+  sendRequest: {
+    width: 100, 
+    height: 50, 
+    backgroundColor: '#357266',
+    justifyContent: 'center',
+    margin: 'auto',
+    paddingLeft: 6,
+    borderRadius: 10,
+  },
+  books: {
+    width: 66,
+    height: 66,
+    backgroundColor: '#357266',
+    borderRadius: 10,
+    margin: 10,
+    
+  }
 });
 
 export default TradeForm;

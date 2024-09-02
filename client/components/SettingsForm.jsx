@@ -65,6 +65,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
     borderRadius: 10,
     padding: 25,
+    borderColor: 'black',
+    borderWidth: 2,
+    
   },
   innerContainer: {
     alignItems: 'center',
@@ -82,7 +85,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     borderRadius: 10,
     backgroundColor: '#EEE',
-  },
+  }
 });
 
 export default SettingsForm;
