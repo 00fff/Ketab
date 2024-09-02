@@ -12,11 +12,28 @@ const SettingsForm = ({ width, height, left, right, color, bottom, id, onPressFu
     const newPrivacyState = Privacy ? "lock-open-outline" : "lock-closed-outline";
     setnewPrivacyState(newPrivacyState); // Assuming you have a state hook for PrivacyState
   }
+  const ChangePrivacyAPI =  async ( state, book_id ) => {
+    try {
+      changePrivacy();
+      const response = await axios.post("http://127.0.0.1:8080/changePrivacy", {
+        state: state,
+        book_id: book_id,
+      }, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        withCredentials: true
+      });
+      
+    } catch (error) {
+      console.error(error);
+    }
+  }
   return (
     <SafeAreaView style={[styles.container, { width, height, left, right, backgroundColor: color, bottom }]}>
       <View style={styles.innerContainer}>
         <Text style={{fontSize: 30,}}>Settings</Text>
-        <TouchableOpacity onPress={changePrivacy}>
+        <TouchableOpacity onPress={() => ChangePrivacyAPI(Privacy, id)}>
         <Ionicons name={newPrivacyState} size={25}/>
         </TouchableOpacity>
           <TouchableOpacity 

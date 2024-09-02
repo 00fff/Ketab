@@ -76,7 +76,7 @@ const Book = () => {
           top: 10,              // Adjust top distance from the top
           zIndex:2,
         }}><Ionicons name="settings-outline"  color={'#a3bbad'} size={25}/></TouchableOpacity>
-        {toggleSettings && (<SettingsForm  width={300} height={350} color={'#a3bbad'} left={50} right={0} bottom={250} onPressFunction={DeleteBook}/>)}
+        {toggleSettings && (<SettingsForm  width={300} height={350} color={'#a3bbad'} left={50} right={0} bottom={250} onPressFunction={DeleteBook} id={param3}/>)}
         <View style={{ position: 'relative', flex: 1 }} >
           {showForm && (
             // Conditionally render the PageForm component if showForm is true

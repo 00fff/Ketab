@@ -393,8 +393,24 @@ def addFriend():
 
     return jsonify({'message': 'Invalid request method'}), 405
 
-    
-
+@app.route("/changePrivacy", methods=["POST"])
+@cross_origin(supports_credentials=True)
+def changePrivacy():
+    if request.method == "POST":
+        privacy_state = request.form.get('state')
+        book_id = request.form.get('book_id')
+        if privacy_state == "true": 
+            privacy_state = "public"
+        elif privacy_state == "false": 
+            privacy_state = "private"
+        changeBookPrivacy = (
+                supabase.table("books")
+                .update({"privacy": privacy_state})
+                .eq("id", book_id)
+                .execute()
+            )
+        return jsonify({'message': 'Friendship already exists'}), 200
+    return jsonify({'message': 'Invalid request method'}), 400
 @app.route('/deleteBook', methods=['POST'])
 @cross_origin(supports_credentials=True)
 def deleteBook():
