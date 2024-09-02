@@ -1,15 +1,24 @@
 import React, { useState } from 'react';
 import { SafeAreaView, View, Text, Button, Image, StyleSheet, Touchable, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios'; // Import axios for making HTTP requests
 
 const SettingsForm = ({ width, height, left, right, color, bottom, id, onPressFunction}) => {
-
-
+  const [Privacy, setPrivacy] = useState(false)
+  const [newPrivacyState, setnewPrivacyState] = useState("lock-closed-outline")
+  const changePrivacy = () => {
+    setPrivacy(!Privacy)
+    const newPrivacyState = Privacy ? "lock-open-outline" : "lock-closed-outline";
+    setnewPrivacyState(newPrivacyState); // Assuming you have a state hook for PrivacyState
+  }
   return (
     <SafeAreaView style={[styles.container, { width, height, left, right, backgroundColor: color, bottom }]}>
       <View style={styles.innerContainer}>
         <Text style={{fontSize: 30,}}>Settings</Text>
+        <TouchableOpacity onPress={changePrivacy}>
+        <Ionicons name={newPrivacyState} size={25}/>
+        </TouchableOpacity>
           <TouchableOpacity 
           onPress = {onPressFunction}
           style={{
@@ -23,6 +32,7 @@ const SettingsForm = ({ width, height, left, right, color, bottom, id, onPressFu
             
           }}
         >Delete Book</TouchableOpacity>
+        
       
       </View>
     </SafeAreaView>
@@ -41,6 +51,7 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     alignItems: 'center',
+    
   },
   label: {
     fontWeight: '900',
