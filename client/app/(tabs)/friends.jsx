@@ -5,11 +5,14 @@ import axios from 'axios';
 import { useRouter } from 'expo-router'; // Import useRouter hook for navigation
 import FriendCard from "../../components/friendCard";
 import RfreindCard from '../../components/RfreindCard'
+import TradeForm from '../../components/TradeForm'
 
 const Friends = () => {
   const [friendSearch, setFriendSearch] = useState("");
   const [friendlist, setFriendList] = useState([])
   const [currentFriendList, setcurrentFriendList] = useState([])
+  const [tradeForm, setTradeForm] = useState(false)
+
   const sendFriendRequest = async ( friend_id ) => {
     try {
       const response = await axios.post("http://127.0.0.1:8080/sendFriendRequest", {
@@ -39,6 +42,11 @@ const Friends = () => {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  const changeFormState = () => {
+    setTradeForm(!tradeForm)
+    console.log(tradeForm)
   }
   const SearchFriends = async (word) => {
     try {
@@ -82,6 +90,7 @@ const Friends = () => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.innerContainer}>
           <Text style={styles.title}>Search</Text>
+          {tradeForm && <TradeForm  width={300} height={350} color={'#a3bbad'} left={50} right={0} bottom={250} onPress={changeFormState}/>}
           <View style={styles.searchBar}>
            
             <Ionicons name="search-outline" size={20} color="#888" style={styles.searchIcon} />
@@ -108,7 +117,7 @@ const Friends = () => {
           </View>
           <View style={{ width: '100%', height: "66%", top: 55, overflow: 'scroll'}}>
             {currentFriendList.map((Friend, index) => (
-              <FriendCard key={index} username={Friend.display_name} pfp={Friend.pfp} removeFriend={() => removeFriend(Friend.display_name)}/>
+              <FriendCard key={index} username={Friend.display_name} pfp={Friend.pfp} removeFriend={() => removeFriend(Friend.display_name)} tradeForm={() => changeFormState()}/>
             ))}
           
           

@@ -57,7 +57,7 @@ const Home = () => {
       
         {toggleCreate && (<CreateBook width={300} height={500} color={'#001427'} toggleCreateBook={toggleCreateBook} fetchBooks id={books.id}/>)}
         <View>
-          <TouchableOpacity onPress={notification} style={{position: 'absolute', right: 0, margin: 20, backgroundColor:'red'}}>
+          <TouchableOpacity onPress={notification} style={{position: 'absolute', right: 0, margin: 20}}>
           <Ionicons name="notifications-circle-outline" size={35}/>
         </TouchableOpacity>
           <Text style={styles.title}>Books</Text>

@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-const FriendCard = ({ username, pfp, removeFriend}) => {
+const FriendCard = ({ username, pfp, removeFriend, tradeForm}) => {
   return (
     <View style={styles.card}>
       <Image 
@@ -11,7 +11,7 @@ const FriendCard = ({ username, pfp, removeFriend}) => {
       />
       <Text style={styles.username}>{username}</Text>
       <View style={styles.spacer} />
-      <TouchableOpacity style={styles.closeButton}>
+      <TouchableOpacity onPress={tradeForm} style={styles.closeButton}>
         <Ionicons name="swap-vertical-outline" size={25} color="#000" />
       </TouchableOpacity>
       <TouchableOpacity onPress={removeFriend} style={{marginLeft: 10,}}>
