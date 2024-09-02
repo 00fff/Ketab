@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-const FriendRequest = ({ username, pfp, addFriend}) => {
+const FriendRequest = ({ username, pfp, addFriend, RemoveFriend}) => {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
@@ -11,7 +11,7 @@ const FriendRequest = ({ username, pfp, addFriend}) => {
           <Ionicons name="checkmark-circle-outline" size={25} />
           
         </TouchableOpacity>
-        <TouchableOpacity style={{right: 0, top: 25, flexDirection: 'row', backgroundColor: 'red', height: 35, borderColor: 'black', borderWidth: 3, borderRadius: 10, marginLeft: 10}}>
+        <TouchableOpacity onPress={RemoveFriend} style={{right: 0, top: 25, flexDirection: 'row', backgroundColor: 'red', height: 35, borderColor: 'black', borderWidth: 3, borderRadius: 10, marginLeft: 10}}>
           <Ionicons name="close-circle-outline" size={25} />
           
         </TouchableOpacity>

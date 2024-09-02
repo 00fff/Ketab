@@ -93,7 +93,7 @@ const Friends = () => {
           </View>
           <View style={{ width: '100%', height: "66%", top: 55, overflow: 'scroll'}}>
             {currentFriendList.map((Friend, index) => (
-              <FriendCard key={index }username={Friend.display_name} pfp={Friend.pfp}/>
+              <FriendCard key={index} username={Friend.display_name} pfp={Friend.pfp}/>
             ))}
           
           

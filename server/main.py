@@ -192,6 +192,7 @@ def createBook():
         return jsonify({'title': title, 'description': description})
     
     return jsonify({'message': 'Invalid request method'}), 400
+
 @app.route("/UpdateText", methods=['POST'])
 @cross_origin(supports_credentials=True)
 def UpdateText():
@@ -354,6 +355,22 @@ def addFriend():
         )
 
         # If neither query returns results, insert the new friendship
+        if  search_friends1.data or search_friends2.data:
+            response1 = (
+                supabase.table("friend_request")
+                .insert({"sender_id": user_id, "receiver_id": friend_id})
+                .execute()
+            )
+            response2 = (
+                supabase.table("friend_request")
+                .insert({"receiver_id": user_id, "sender_id": friend_id})
+                .execute()
+            )
+            if response2.data is not None:
+                delete_row = supabase.table('friend_request').delete().eq("receiver_id", user_id).eq("sender_id", friend_id).execute()
+            elif response1.data is not None:
+                delete_row = supabase.table('friend_request').delete().eq("sender_id", user_id).eq("receiver_id", friend_id).execute()
+        # If neither query returns results, insert the new friendship
         if not search_friends1.data and not search_friends2.data:
             response = (
                 supabase.table("friends")
@@ -433,6 +450,19 @@ def sendFreindRequest():
         return jsonify("Friend Request Sent!"), 200
     return jsonify("Unable To Send Friend Request "), 200
 
+@app.route("/denyRequest", methods=['POST'])
+@cross_origin(supports_credentials=True)
+def denyRequest():
+    if request.method == "POST":
+        if session.get("user_id"):
+            user_id = session.get("user_id")
+        else: 
+            return jsonify({'message': 'User Not In Session'}), 400
+        friend_id = request.form.get("friend_id")
+        delete_row = supabase.table('friend_request').delete().eq("receiver_id", user_id).eq("sender_id", friend_id).execute()
+        return jsonify({"message": "Succefully Removed Friend Request"}), 200
+    
+    return jsonify({"message": "Unable To List Friend Requests"}), 400
 @app.route("/listFriendRequests", methods=['GET'])
 @cross_origin(supports_credentials=True)
 def listFriendRequests():

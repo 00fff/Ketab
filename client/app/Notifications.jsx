@@ -18,6 +18,22 @@ const Notifications = () => {
         },
         withCredentials: true // Include credentials if needed
       });
+      router.back()
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const RemoveFriend = async ( friendID ) => {
+    try {
+      const response = await axios.post("http://127.0.0.1:8080/denyRequest", {
+        friend_id : friendID
+      }, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        withCredentials: true // Include credentials if needed
+      });
+      router.back()
     } catch (error) {
       console.error(error);
     }
@@ -39,6 +55,9 @@ const Notifications = () => {
       console.error(error);
     }
   };
+  const sendHome = () => {
+    router.back()
+  }
   useEffect(() => {
     FetchFriendRequest();
   }, []);
@@ -47,7 +66,7 @@ const Notifications = () => {
     <SafeAreaView style={{ backgroundColor: '#357266', flex: 1 }}>
     <ScrollView>
     <View>
-      {FriendRequests.map((friends, index) => (<FriendRequest key={index} username={friends.friend_data.display_name} pfp={friends.friend_data.pfp ? friends.friend_data.display_name : ''} addFriend={() => AddFriend(friends.id)}/>
+      {FriendRequests.map((friends, index) => (<FriendRequest key={index} username={friends.friend_data.display_name} pfp={friends.friend_data.pfp ? friends.friend_data.pfp : ''} addFriend={() => AddFriend(friends.id)} RemoveFriend={() => RemoveFriend(friends.id)}/>
       ))}
   
     </View>
