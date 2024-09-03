@@ -66,7 +66,7 @@ const Home = () => {
         <View style={{  flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center'  }}>
           
           {books.map((book, index) => (
-            <BookIcon key={index} title={book.title} cover={book.cover} onPressed={() => showBook(book.title, book.description, book.id, fetchBooks)} />
+            <BookIcon key={book.id} title={book.title} cover={book.cover} onPressed={() => showBook(book.title, book.description, book.id, fetchBooks)} />
           ))}
           
         </View>

@@ -585,7 +585,7 @@ def translate(img):
 def listBooks():
     if request.method =='GET':
         user_id = session['user_id']
-        response = supabase.table("books").select("title", "description", "id", "cover").eq("user_id", user_id).execute()
+        response = supabase.table("books").select("title", "description", "id", "cover").eq("user_id", user_id).order('created_at').execute()
         # response = supabase.table("page").select("img, translated_img").eq("book_id", book_id).execute()
     return jsonify({'response': response.data}), 200
 
@@ -595,7 +595,7 @@ def listPages():
     if request.method == 'GET':
         book_id = request.args.get('book_id')
         print(book_id)
-        response = supabase.table("page").select("id", "img", "translated_img").eq("book_id", book_id).execute()
+        response = supabase.table("page").select("id", "img", "translated_img").eq("book_id", book_id).order('created_at').execute()
     return jsonify({'response': response.data}), 200
 
 
