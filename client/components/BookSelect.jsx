@@ -1,32 +1,45 @@
-import React, { useState } from 'react';
+import React, {useState, useEffect} from 'react';
 import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import BookSelect from '../components/BookSelect'; // Import SettingsForm component
-const TradeForm = ({ width, height, left, right, color, bottom, onPress}) => {
-  const [toggleBook, setToggleBook] = useState(false)
-  const [book1, setBook1] = useState("")
-  const [book2, setBook2] = useState("")
-  const OpenBookSelection = () => {
-    setToggleBook(!toggleBook)
-  }
+import axios from 'axios';
+import BookIconSelect from "../components/BookIconSelect";
+const BookSelect = ({ width, height, left, right, color, bottom, submitData, closeTab}) => {
+  const [books, setBooks] = useState([]);
   const addBook = ( id ) => {
     console.log(id)
-    setBook1(id)
   }
+  const fetchBooks = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8080/listBooks", {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        withCredentials: true // Include credentials if needed
+      });
+      const data = response.data.response;
+      console.log('API Response:', data);
+      setBooks(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetchBooks();
+  }, []);
+
   return (
     <SafeAreaView style={[styles.container, { width, height, left, right, backgroundColor: color, bottom }]}>
       <View style={styles.innerContainer}>
-        {toggleBook && <BookSelect width={300} height={350} color={'#a3bbad'} left={-2} right={0} bottom={-2} closeTab={() => OpenBookSelection()} submitData={addBook}/>}
-        <TouchableOpacity onPress={onPress} style={styles.closeButton}>
+        <TouchableOpacity onPress={closeTab} style={styles.closeButton}>
           <Ionicons name="close-outline" size={25} />
         </TouchableOpacity>
-        <Text style={styles.title}>Trade Books</Text>
+        <Text style={styles.title}>Select Book!</Text>
         <View style={styles.BookRow}>
-        <TouchableOpacity onPress={() => OpenBookSelection()} style={styles.books}>{book1 && book1}</TouchableOpacity>
-        <TouchableOpacity onPress={() => OpenBookSelection()} style={styles.books}>{book2 && book2}</TouchableOpacity>
+           {books.map((book, index) => (
+            <TouchableOpacity onPress={() => submitData(book.id)} style={{margin: 10}}><BookIconSelect key={book.id} title={book.title} cover={book.cover} /></TouchableOpacity>
+          ))}
+        
         </View>
-       
-        <TouchableOpacity style={styles.sendRequest}>Send Request</TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -47,6 +60,7 @@ const styles = StyleSheet.create({
   },
   BookRow: {
     flexDirection: 'row',
+    overflow: 'scroll',
     
   },
   innerContainer: {
@@ -84,4 +98,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default TradeForm;
+export default BookSelect;
