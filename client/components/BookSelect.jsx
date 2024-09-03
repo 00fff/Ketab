@@ -3,7 +3,7 @@ import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity } from 'react-na
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import BookIconSelect from "../components/BookIconSelect";
-const BookSelect = ({ width, height, left, right, color, bottom, submitData, closeTab}) => {
+const BookSelect = ({ width, height, left, right, color, bottom, submitData, closeTab, choice}) => {
   const [books, setBooks] = useState([]);
   const addBook = ( id ) => {
     console.log(id)
@@ -25,6 +25,7 @@ const BookSelect = ({ width, height, left, right, color, bottom, submitData, clo
   };
   useEffect(() => {
     fetchBooks();
+    console.log(choice)
   }, []);
 
   return (
