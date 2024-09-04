@@ -285,7 +285,7 @@ def friendList():
         for id in friend_list:
             search_fprofiles = (
             supabase.table("profile")
-            .select("display_name", "pfp")
+            .select("display_name", "pfp", "id")
             .eq("id", id)
             .execute()
                 )
@@ -588,6 +588,17 @@ def listBooks():
         response = supabase.table("books").select("title", "description", "id", "cover").eq("user_id", user_id).order('created_at').execute()
         # response = supabase.table("page").select("img, translated_img").eq("book_id", book_id).execute()
     return jsonify({'response': response.data}), 200
+
+@app.route('/listFriendBooks', methods=['GET'])
+@cross_origin(supports_credentials=True)
+def listFriendBooks():
+    if request.method =='GET':
+        friend_id = request.args.get("friend_id")
+        print(friend_id)
+        response = supabase.table("books").select("title", "description", "id", "cover").eq("user_id", friend_id).eq('privacy', "public").order('created_at').execute()
+        # response = supabase.table("page").select("img, translated_img").eq("book_id", book_id).execute()
+        return jsonify({'response': response.data}), 200
+    return jsonify({'response': "Unable to Retreive Books"}), 400
 
 @app.route('/listPages', methods=['GET'])
 @cross_origin(supports_credentials=True)

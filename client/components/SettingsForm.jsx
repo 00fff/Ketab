@@ -48,7 +48,7 @@ const SettingsForm = ({ width, height, left, right, color, bottom, id, onPressFu
             
             
           }}
-        >Delete Book</TouchableOpacity>
+        ><Text>Delete Book</Text></TouchableOpacity>
         
       
       </View>

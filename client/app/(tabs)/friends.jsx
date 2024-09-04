@@ -12,6 +12,7 @@ const Friends = () => {
   const [friendlist, setFriendList] = useState([])
   const [currentFriendList, setcurrentFriendList] = useState([])
   const [tradeForm, setTradeForm] = useState(false)
+  const [currentFriendID, setcurrentFriendID] = useState("")
 
   const sendFriendRequest = async ( friend_id ) => {
     try {
@@ -44,7 +45,8 @@ const Friends = () => {
     }
   }
 
-  const changeFormState = () => {
+  const changeFormState = ( friend_id ) => {
+    setcurrentFriendID(friend_id)
     setTradeForm(!tradeForm)
     console.log(tradeForm)
   }
@@ -90,7 +92,7 @@ const Friends = () => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.innerContainer}>
           <Text style={styles.title}>Search</Text>
-          {tradeForm && <TradeForm  width={300} height={350} color={'#a3bbad'} left={50} right={0} bottom={250} onPress={changeFormState}/>}
+          {tradeForm && <TradeForm  width={300} height={350} color={'#a3bbad'} left={50} right={0} bottom={250} onPress={changeFormState} friend_id={currentFriendID}/>}
           <View style={styles.searchBar}>
            
             <Ionicons name="search-outline" size={20} color="#888" style={styles.searchIcon} />
@@ -117,7 +119,7 @@ const Friends = () => {
           </View>
           <View style={{ width: '100%', height: "66%", top: 55, overflow: 'scroll'}}>
             {currentFriendList.map((Friend, index) => (
-              <FriendCard key={index} username={Friend.display_name} pfp={Friend.pfp} removeFriend={() => removeFriend(Friend.display_name)} tradeForm={() => changeFormState()}/>
+              <FriendCard key={index} username={Friend.display_name} pfp={Friend.pfp} removeFriend={() => removeFriend(Friend.display_name)} tradeForm={() => changeFormState(Friend.id)}/>
             ))}
           
           

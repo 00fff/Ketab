@@ -3,7 +3,7 @@ import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity } from 'react-na
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import BookIconSelect from "../components/BookIconSelect";
-const BookSelect = ({ width, height, left, right, color, bottom, submitData, closeTab, choice}) => {
+const BookSelect = ({ width, height, left, right, color, bottom, submitData, closeTab, choice, friend_id}) => {
   const [books, setBooks] = useState([]);
   const addBook = ( id ) => {
     console.log(id)
@@ -23,8 +23,31 @@ const BookSelect = ({ width, height, left, right, color, bottom, submitData, clo
       console.error(error);
     }
   };
+  const fetchBooks_friend = async ( friend_id ) => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8080/listFriendBooks", {
+        params: { friend_id },
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        withCredentials: true // Include credentials if needed
+      });
+      const data = response.data.response;
+      console.log('API Response:', data);
+      setBooks(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   useEffect(() => {
-    fetchBooks();
+    if (choice == 2 && friend_id) {
+      fetchBooks_friend(friend_id);
+      console.log("friend")
+    } else {
+      fetchBooks();
+      console.log("dw")
+    };
+    
     console.log(choice)
   }, []);
 
@@ -37,7 +60,7 @@ const BookSelect = ({ width, height, left, right, color, bottom, submitData, clo
         <Text style={styles.title}>Select Book!</Text>
         <View style={styles.BookRow}>
            {books.map((book, index) => (
-            <TouchableOpacity onPress={() => submitData(book.id)} style={{margin: 10}}><BookIconSelect key={book.id} title={book.title} cover={book.cover} /></TouchableOpacity>
+            <TouchableOpacity onPress={() => submitData(book.id, book.cover)} style={{margin: 10}}><BookIconSelect key={book.id} title={book.title} cover={book.cover} /></TouchableOpacity>
           ))}
         
         </View>

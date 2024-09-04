@@ -1,20 +1,28 @@
 import React, { useState } from 'react';
-import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { SafeAreaView, View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import BookSelect from '../components/BookSelect'; // Import SettingsForm component
-const TradeForm = ({ width, height, left, right, color, bottom, onPress}) => {
+const TradeForm = ({ width, height, left, right, color, bottom, onPress, friend_id}) => {
   const [toggleBook, setToggleBook] = useState(false)
   const [book1, setBook1] = useState("")
+  const [book1img, setbook1img] = useState("")
   const [book2, setBook2] = useState("")
   const [bookchoice, setbookChoice] = useState("")
-  const OpenBookSelection = (choice) => {
+  const OpenBookSelection = (choice, friend_id) => {
     setToggleBook(!toggleBook)
-    setbookChoice(choice)
+    if (choice == 1){ 
+      setbookChoice(choice)
+    } if (choice == 2) {
+      setbookChoice(choice, friend_id)
+    }
+    
     console.log("choice " + bookchoice)
   }
-  const addBook = ( id ) => {
+  const addBook = ( id, img ) => {
     if (bookchoice === 1) {
       setBook1(id)
+      setbook1img(img)
+      console.log("img " + book1img)
     } if (bookchoice === 2) {
       setBook2(id)
     }
@@ -24,17 +32,17 @@ const TradeForm = ({ width, height, left, right, color, bottom, onPress}) => {
   return (
     <SafeAreaView style={[styles.container, { width, height, left, right, backgroundColor: color, bottom }]}>
       <View style={styles.innerContainer}>
-        {toggleBook && <BookSelect width={300} height={350} color={'#a3bbad'} left={-2} right={0} bottom={-2} closeTab={() => OpenBookSelection()} submitData={addBook} choice={bookchoice}/>}
+        {toggleBook && <BookSelect width={300} height={350} color={'#a3bbad'} left={-2} right={0} bottom={-2} closeTab={() => OpenBookSelection()} submitData={addBook} choice={bookchoice} friend_id={friend_id}/>}
         <TouchableOpacity onPress={onPress} style={styles.closeButton}>
           <Ionicons name="close-outline" size={25} />
         </TouchableOpacity>
         <Text style={styles.title}>Trade Books</Text>
         <View style={styles.BookRow}>
-        <TouchableOpacity onPress={() => OpenBookSelection( 1 )} style={styles.books}>{book1 ? <Text>{book1}</Text> : <Text>Select Book 1</Text>}</TouchableOpacity>
+        <TouchableOpacity onPress={() => OpenBookSelection( 1 )} style={styles.books}>{book1 ? <Image source={{ uri: book1img }} style={{height: 66, width: 66, zIndex:-1, borderRadius:10, justifyContent: 'center'}} /> : <Text>Select Book 1</Text>}</TouchableOpacity>
         <TouchableOpacity onPress={() => OpenBookSelection( 2 )} style={styles.books}>{book2 ? <Text>{book2}</Text> : <Text>Select Book 2</Text>}</TouchableOpacity>
         </View>
        
-        <TouchableOpacity style={styles.sendRequest}>Send Request</TouchableOpacity>
+        <TouchableOpacity style={styles.sendRequest}><Text>Send Request</Text></TouchableOpacity>
       </View>
     </SafeAreaView>
   );
