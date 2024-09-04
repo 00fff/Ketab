@@ -589,6 +589,22 @@ def listBooks():
         # response = supabase.table("page").select("img, translated_img").eq("book_id", book_id).execute()
     return jsonify({'response': response.data}), 200
 
+@app.route("/tradeBooks", methods=["POST"])
+@cross_origin(supports_credentials=True)
+def TradeBooks():
+    if request.method == "POST": 
+        book1 = request.form.get('book1')
+        book2 = request.form.get('book2')
+        user1 = session['user_id']
+        user2 = request.form.get('user2')
+        response = (
+            supabase.table("book_trade")
+            .insert({"book_1": book1, 'book_2':book2, 'user_id1': user1, 'user_id2': user2})
+            .execute()
+        )
+        return jsonify({'response': response.data}), 200
+
+
 @app.route('/listFriendBooks', methods=['GET'])
 @cross_origin(supports_credentials=True)
 def listFriendBooks():
