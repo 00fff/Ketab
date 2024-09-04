@@ -603,7 +603,21 @@ def TradeBooks():
             .execute()
         )
         return jsonify({'response': response.data}), 200
+    return jsonify({'response': "Unable to Retreive Books"}), 400
 
+@app.route("/listTradeRequest", methods=["GET"])
+@cross_origin(supports_credentials=True)
+def listTradeRequest():
+    if request.method =='GET':
+        user_id = session['user_id']
+        response = (
+            supabase.table("book_trade")
+            .select("*")
+            .eq("user_id2", user_id)
+            .execute()
+        )
+        return jsonify({'response': response.data}), 200
+    return jsonify({'response': "Unable to Retreive Books"}), 400
 
 @app.route('/listFriendBooks', methods=['GET'])
 @cross_origin(supports_credentials=True)

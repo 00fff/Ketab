@@ -8,6 +8,7 @@ import axios from 'axios';
 const Notifications = () => {
   const router = useRouter();
   const [FriendRequests, setFriendRequests] = useState([]) 
+  const [tradeRequest, settradeRequest] = useState([])
   const AddFriend = async ( friendID) => {
     try {
       const response = await axios.post("http://127.0.0.1:8080/addFriend", {
@@ -50,7 +51,23 @@ const Notifications = () => {
       setFriendRequests(data)
       
       console.log('API Response:', FriendRequests);
-      console.log(data[0].friend_data)
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const fetchTradeRequest = async () => {
+    try {
+      const response = await axios.get("http://127.0.0.1:8080/listTradeRequest", {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        withCredentials: true // Include credentials if needed
+      });
+      const data = response.data.response.response;
+      settradeRequest(data)
+      
+      console.log('API Response:', tradeRequest);
     } catch (error) {
       console.error(error);
     }
@@ -60,6 +77,7 @@ const Notifications = () => {
   }
   useEffect(() => {
     FetchFriendRequest();
+    fetchTradeRequest();
   }, []);
 
   return (
