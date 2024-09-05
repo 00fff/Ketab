@@ -608,16 +608,57 @@ def TradeBooks():
 @app.route("/listTradeRequest", methods=["GET"])
 @cross_origin(supports_credentials=True)
 def listTradeRequest():
-    if request.method =='GET':
-        user_id = session['user_id']
-        response = (
-            supabase.table("book_trade")
-            .select("*")
-            .eq("user_id2", user_id)
-            .execute()
-        )
-        return jsonify({'response': response.data}), 200
-    return jsonify({'response': "Unable to Retreive Books"}), 400
+    if request.method == 'GET':
+        try:
+            user_id = session.get('user_id')
+            if not user_id:
+                return jsonify({'response': "User not authenticated"}), 401
+            
+            # Fetch all trade requests for the user
+            response = (
+                supabase.table("book_trade")
+                .select("*")
+                .eq("user_id2", user_id)
+                .execute()
+            )
+            
+            trade_requests = response.data
+            book_information_list = []
+
+            for trade in trade_requests:
+                book1_id = trade.get("book_1")
+                book2_id = trade.get("book_2")
+                
+                # Fetch book details
+                book1_response = (
+                    supabase.table("books")
+                    .select("*")
+                    .eq("id", book1_id)
+                    .execute()
+                )
+                book2_response = (
+                    supabase.table("books")
+                    .select("*")
+                    .eq("id", book2_id)
+                    .execute()
+                )
+                
+                book1_info = book1_response.data
+                book2_info = book2_response.data
+                
+                # Add the trade request information to the list
+                book_information_list.append({
+                    'book1': book1_info,
+                    'book2': book2_info
+                })
+
+            return jsonify({'response': book_information_list}), 200
+        
+        except Exception as e:
+            print(f"Error: {e}")
+            return jsonify({'response': "Unable to Retrieve Books"}), 500
+
+    return jsonify({'response': "Invalid Request Method"}), 405
 
 @app.route('/listFriendBooks', methods=['GET'])
 @cross_origin(supports_credentials=True)
