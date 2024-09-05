@@ -9,7 +9,36 @@ const Notifications = () => {
   const router = useRouter();
   const [friendRequests, setFriendRequests] = useState([]);
   const [currentTradeRequest, setCurrentTradeRequest] = useState([]);
-
+  const AddFriend = async ( friendID) => {
+    try {
+      const response = await axios.post("http://127.0.0.1:8080/addFriend", {
+        friend_id : friendID
+      }, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        withCredentials: true // Include credentials if needed
+      });
+      router.back()
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const RemoveFriend = async ( friendID ) => {
+    try {
+      const response = await axios.post("http://127.0.0.1:8080/denyRequest", {
+        friend_id : friendID
+      }, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        withCredentials: true // Include credentials if needed
+      });
+      router.back()
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const fetchFriendRequest = async () => {
     try {
       const response = await axios.get("http://127.0.0.1:8080/listFriendRequests", {
@@ -58,17 +87,8 @@ const Notifications = () => {
     <SafeAreaView style={{ backgroundColor: '#357266', flex: 1 }}>
       <ScrollView>
         <View>
-          {friendRequests.length > 0 ? (
-            friendRequests.map((friend, index) => (
-              <FriendRequest
-                key={index}
-                username={friend.friend_data.display_name}
-                pfp={friend.friend_data.pfp || ''}
-              />
-            ))
-          ) : (
-            <Text>No Friend Requests</Text>
-          )}
+        {friendRequests.map((friends, index) => (<FriendRequest key={index} username={friends.friend_data.display_name} pfp={friends.friend_data.pfp ? friends.friend_data.pfp : ''} addFriend={() => AddFriend(friends.id)} RemoveFriend={() => RemoveFriend(friends.id)}/>
+      ))}
           {currentTradeRequest.length > 0 ? (
             currentTradeRequest.map((currentTradeRequest, index) => (
               <BookRequest

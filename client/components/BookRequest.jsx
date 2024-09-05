@@ -30,8 +30,10 @@ const BookRequest = ({ book1cover, book2cover }) => {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 10,
     marginBottom: 10,
     marginHorizontal: 15, // Adjust for better spacing
+    marginLeft:10,
   },
   card: {
     flexDirection: 'row', // Arrange items in a row

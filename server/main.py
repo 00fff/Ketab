@@ -331,7 +331,7 @@ def friendSearch():
 def addFriend():
     if request.method == 'POST':
         friend_id = request.form.get('friend_id')
-
+        print(friend_id)
         if session.get("user_id"):
             user_id = session.get("user_id")
         else: 
