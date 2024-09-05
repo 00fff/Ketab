@@ -300,9 +300,6 @@ def friendList():
     return jsonify({'message': 'Invalid request method'}), 400
 
 
-
-
-
 @app.route("/friendSearch", methods=['GET'])
 @cross_origin(supports_credentials=True)
 def friendSearch():
@@ -605,6 +602,17 @@ def TradeBooks():
         return jsonify({'response': response.data}), 200
     return jsonify({'response': "Unable to Retreive Books"}), 400
 
+@app.route("/deleteTrade", methods=["POST"])
+@cross_origin(supports_credentials=True)
+def deleteTrade():
+    if request.method == 'POST':
+        user_id = session.get("user_id")
+        book2 = request.form.get("book2")
+        response = supabase.table('book_trade').delete().eq('book_2', book2).eq("user_id2", user_id).execute()
+        return jsonify({'response': response.data}), 200
+    return jsonify({'response': "Unable to Retreive Books"}), 400
+
+        
 @app.route("/listTradeRequest", methods=["GET"])
 @cross_origin(supports_credentials=True)
 def listTradeRequest():

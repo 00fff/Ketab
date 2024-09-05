@@ -39,6 +39,21 @@ const Notifications = () => {
       console.error(error);
     }
   };
+  const RemoveTrade = async ( Book_id ) => {
+    try {
+      const response = await axios.post("http://127.0.0.1:8080/deleteTrade", {
+        book2 : Book_id
+      }, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        withCredentials: true // Include credentials if needed
+      });
+      router.back()
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const fetchFriendRequest = async () => {
     try {
       const response = await axios.get("http://127.0.0.1:8080/listFriendRequests", {
@@ -95,10 +110,11 @@ const Notifications = () => {
                 key={index}
                 book1cover={currentTradeRequest.book1[0]?.cover || 'default_image_url'}
                 book2cover={currentTradeRequest.book2[0]?.cover || 'default_image_url'}
+                removeBook={() => RemoveTrade(currentTradeRequest.book2[0]?.id)}
               />
             ))
           ) : (
-            <Text>No Trade Requests</Text>
+            <Text></Text>
           )}
         </View>
       </ScrollView>
