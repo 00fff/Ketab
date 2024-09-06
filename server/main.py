@@ -421,10 +421,19 @@ def deleteBook():
         list = bucket.list(path=file_path)
         print(list)
         delete_response = supabase.storage.from_("Pages").remove(file_path)
-        # res = supabase.storage.empty_bucket(f"Pages/{file_path}")
+        response = (
+            supabase.table("page")
+            .select("*")
+            .eq("book_id", id)
+            .execute()
+        )
+        deletePages = supabase.table('pages').delete().eq('book_id', id).execute()
 
-        print(delete_response)
-        return jsonify("Book Succefully Deleted"), 200
+
+
+        # res = supabase.storage.empty_bucket(f"Pages/{file_path}")
+        return jsonify("Succefully delete book"), 200
+    return jsonify("unable to delete book"), 200
 
 @app.route("/sendFriendRequest", methods = ['POST'])
 @cross_origin(supports_credentials=True)
@@ -601,6 +610,72 @@ def TradeBooks():
         )
         return jsonify({'response': response.data}), 200
     return jsonify({'response': "Unable to Retreive Books"}), 400
+
+@app.route("/makeTrade", methods=['POST'])
+@cross_origin(supports_credentials=True)
+def makeTrade():
+    if request.method == "POST":
+        book_id = request.form.get("book_id")
+        book_id2 = request.form.get("book_id2")
+        user_id = session.get('user_id')
+        friend_id = request.form.get("friend_id")
+
+        # Fetching the books for the user and friend
+        response = supabase.table("books").select("*").eq("id", book_id).execute()
+        friend_trade = supabase.table("books").select("*").eq("id", book_id2).execute()
+
+        if not response.data or not friend_trade.data:
+            return jsonify({'response': "One or both books not found"}), 404
+
+        # Assigning the book data
+        book = response.data[0]
+        book2 = friend_trade.data[0]
+
+        # Inserting the books into each other's trade lists
+        new_book = supabase.table("books").insert({
+            "title": book["title"], 
+            "description": book["description"], 
+            "user_id": user_id, 
+            "cover": book["cover"], 
+            "privacy": book["privacy"]
+        }).execute()
+
+        friend_new_book = supabase.table("books").insert({
+            "title": book2["title"], 
+            "description": book2["description"], 
+            "user_id": friend_id, 
+            "cover": book2["cover"], 
+            "privacy": book2["privacy"]
+        }).execute()
+
+        new_book_id = new_book.data[0]["id"]
+        friend_book_id = friend_new_book.data[0]["id"]
+
+        # Fetching and inserting pages for the first book
+        pages = supabase.table("page").select("*").eq("book_id", book_id).execute()
+
+        if pages.data:
+            for page in pages.data: 
+                supabase.table("page").insert({
+                    "book_id": new_book_id,
+                    "img": page["img"],
+                    "translated_img": page['translated_img'],
+                }).execute()
+
+        # Fetching and inserting pages for the friend's book
+        friend_pages = supabase.table("page").select("*").eq("book_id", book_id2).execute()
+
+        if friend_pages.data:
+            for page in friend_pages.data: 
+                supabase.table("page").insert({
+                    "book_id": friend_book_id,
+                    "img": page["img"],
+                    "translated_img": page['translated_img'],
+                }).execute()
+
+        return jsonify({'response': "Trade completed successfully"}), 200
+        
+    return jsonify({'response': "Unable to retrieve books"}), 400
 
 @app.route("/deleteTrade", methods=["POST"])
 @cross_origin(supports_credentials=True)
