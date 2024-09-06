@@ -9,6 +9,23 @@ const Notifications = () => {
   const router = useRouter();
   const [friendRequests, setFriendRequests] = useState([]);
   const [currentTradeRequest, setCurrentTradeRequest] = useState([]);
+  const AcceptTrade = async (index) => {
+    try {
+      const response = await axios.post("http://127.0.0.1:8080/makeTrade", {
+        book_id : currentTradeRequest[index].book1[0].id,
+        book_id2 : currentTradeRequest[index].book2[0].id,
+        friend_id: currentTradeRequest[index].book1[0].user_id,
+      }, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        withCredentials: true // Include credentials if needed
+      });
+      router.back()
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const AddFriend = async ( friendID) => {
     try {
       const response = await axios.post("http://127.0.0.1:8080/addFriend", {
@@ -111,6 +128,7 @@ const Notifications = () => {
                 book1cover={currentTradeRequest.book1[0]?.cover || 'default_image_url'}
                 book2cover={currentTradeRequest.book2[0]?.cover || 'default_image_url'}
                 removeBook={() => RemoveTrade(currentTradeRequest.book2[0]?.id)}
+                acceptTrade={() => AcceptTrade(index)}
               />
             ))
           ) : (

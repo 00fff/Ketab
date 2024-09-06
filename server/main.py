@@ -427,7 +427,7 @@ def deleteBook():
             .eq("book_id", id)
             .execute()
         )
-        deletePages = supabase.table('pages').delete().eq('book_id', id).execute()
+        deletePages = supabase.table('page').delete().eq('book_id', id).execute()
 
 
 

@@ -2,11 +2,11 @@ import React from 'react';
 import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Ionicons } from 'react-native-vector-icons';
 
-const BookRequest = ({ book1cover, book2cover, removeBook}) => {
+const BookRequest = ({ book1cover, book2cover, removeBook, acceptTrade}) => {
   return (
     <View style={styles.container}>
       <View style={styles.card}>
-        <TouchableOpacity style={styles.iconButton}>
+        <TouchableOpacity onPress={acceptTrade} style={styles.iconButton}>
           <Ionicons name="add-outline" size={24} color="#fff" />
         </TouchableOpacity>
         <TouchableOpacity onPress={removeBook} style={styles.iconButtonx}>
