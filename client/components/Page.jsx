@@ -10,6 +10,7 @@ const Page = ({ book_id, createPage, updatePages, setUpdatePages}) => {
   const [pages, setPages] = useState([]); // State to store page data
   const [currentPage, setCurrentPage] = useState(0); // State to track the current page
   const [editWords, seteditWords] = useState(false)
+  const [fullscreen, setFullScreen] = useState(false)
 
   // Function to fetch pages from the API
   const fetchBooks = async () => {
@@ -77,7 +78,9 @@ const Page = ({ book_id, createPage, updatePages, setUpdatePages}) => {
     }, 3600000);
     return () => clearInterval(intervalId); // Cleanup interval on component unmount
   }, []);
-
+  const fullScreen = () => {
+    setFullScreen(!fullScreen)
+  }
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={{ flex: 1, backgroundColor: "#357266" }}>
@@ -96,11 +99,12 @@ const Page = ({ book_id, createPage, updatePages, setUpdatePages}) => {
             {translate ? (
               // Render image if in translate mode
               
-              <Image
-                source={{ uri: pages[currentPage]?.img || '' }}
+              <TouchableOpacity activeOpacity={1} onPress={() => fullScreen()} style={{ backgroundColor: 'transparent', width: '100%', height: '100%' }}>
+                <Image
+                source={{ uri: pages[currentPage]?.img || '' }} 
                 style={{ width: '100%', height: '100%', resizeMode: 'contain' }}
               />
-              
+</TouchableOpacity>
             ) : (
               // Render translated content if not in translate mode
               <View style={{
