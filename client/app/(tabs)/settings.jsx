@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import { useRouter } from 'expo-router';
-import { View, Text, SafeAreaView, ScrollView, Platform, Image } from 'react-native';
+import { View, Text, SafeAreaView, ScrollView, Platform, Image, TouchableOpacity } from 'react-native';
 import CustomButton from '../../components/CustomButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SecureStore from 'expo-secure-store';
@@ -59,7 +59,12 @@ const Settings = () => {
           {/* Button to trigger the logout function */}
           <Image source={{ uri: pfp }} style={{ width: 100, height: 100, borderRadius: 7, alignSelf: 'center', paddingTop: 50}}/>
           <Text style={{fontSize: 50, textAlign: 'center'}}>{username}</Text>
-          <CustomButton text={'Log Out'} onPress={LogOut} color={'#0e3b43'} />
+          <TouchableOpacity style={{
+            backgroundColor: '#0e3b43',
+            borderRadius: 8,
+            paddingVertical: 15,
+            marginTop: 30,
+            alignItems: 'center'}} onPress={LogOut}>Log Out</TouchableOpacity>
 
         </View>
       </ScrollView>
