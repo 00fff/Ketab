@@ -4,10 +4,10 @@ import { CameraView, CameraType, useCameraPermissions} from 'expo-camera';
 
 const camera = () => {
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{backgroundColor: "#0e3b43", flex: 1,}}>
     <ScrollView>
     <View>
-      <Text>Camera</Text>
+      <Text></Text>
     </View>
     </ScrollView>
     </SafeAreaView>
